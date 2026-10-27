@@ -1,0 +1,328 @@
+@import '../(frontend)/theme.css';
+
+/* Map Payload's semantic CSS API to the central Medval theme. */
+:root {
+  --color-base-0: var(--admin-base-0);
+  --color-base-50: var(--admin-base-50);
+  --color-base-100: var(--admin-base-100);
+  --color-base-150: var(--admin-base-150);
+  --color-base-200: var(--admin-base-200);
+  --color-base-250: var(--admin-base-250);
+  --color-base-300: var(--admin-base-300);
+  --color-base-350: var(--admin-base-350);
+  --color-base-400: var(--admin-base-400);
+  --color-base-450: var(--admin-base-450);
+  --color-base-500: var(--admin-base-500);
+  --color-base-550: var(--admin-base-550);
+  --color-base-600: var(--admin-base-600);
+  --color-base-650: var(--admin-base-650);
+  --color-base-700: var(--admin-base-700);
+  --color-base-750: var(--admin-base-750);
+  --color-base-800: var(--admin-base-800);
+  --color-base-850: var(--admin-base-850);
+  --color-base-900: var(--admin-base-900);
+  --color-base-950: var(--admin-base-950);
+  --color-base-1000: var(--admin-base-1000);
+
+  --color-success-50: var(--admin-action-50);
+  --color-success-100: var(--admin-action-100);
+  --color-success-150: var(--admin-action-150);
+  --color-success-200: var(--admin-action-200);
+  --color-success-250: var(--admin-action-250);
+  --color-success-300: var(--admin-action-300);
+  --color-success-350: var(--admin-action-350);
+  --color-success-400: var(--admin-action-400);
+  --color-success-450: var(--admin-action-450);
+  --color-success-500: var(--admin-action-500);
+  --color-success-550: var(--admin-action-550);
+  --color-success-600: var(--admin-action-600);
+  --color-success-650: var(--admin-action-650);
+  --color-success-700: var(--admin-action-700);
+  --color-success-750: var(--admin-action-750);
+  --color-success-800: var(--admin-action-800);
+  --color-success-850: var(--admin-action-850);
+  --color-success-900: var(--admin-action-900);
+  --color-success-950: var(--admin-action-950);
+
+  --color-warning-50: var(--admin-action-50);
+  --color-warning-100: var(--admin-action-100);
+  --color-warning-150: var(--admin-action-150);
+  --color-warning-200: var(--admin-action-200);
+  --color-warning-250: var(--admin-action-250);
+  --color-warning-300: var(--admin-action-300);
+  --color-warning-350: var(--admin-action-350);
+  --color-warning-400: var(--admin-action-400);
+  --color-warning-450: var(--admin-action-450);
+  --color-warning-500: var(--admin-action-500);
+  --color-warning-550: var(--admin-action-550);
+  --color-warning-600: var(--admin-action-600);
+  --color-warning-650: var(--admin-action-650);
+  --color-warning-700: var(--admin-action-700);
+  --color-warning-750: var(--admin-action-750);
+  --color-warning-800: var(--admin-action-800);
+  --color-warning-850: var(--admin-action-850);
+  --color-warning-900: var(--admin-action-900);
+  --color-warning-950: var(--admin-action-950);
+
+  --color-error-50: var(--admin-error-50);
+  --color-error-100: var(--admin-error-100);
+  --color-error-150: var(--admin-error-150);
+  --color-error-200: var(--admin-error-200);
+  --color-error-250: var(--admin-error-250);
+  --color-error-300: var(--admin-error-300);
+  --color-error-350: var(--admin-error-350);
+  --color-error-400: var(--admin-error-400);
+  --color-error-450: var(--admin-error-450);
+  --color-error-500: var(--admin-error-500);
+  --color-error-550: var(--admin-error-550);
+  --color-error-600: var(--admin-error-600);
+  --color-error-650: var(--admin-error-650);
+  --color-error-700: var(--admin-error-700);
+  --color-error-750: var(--admin-error-750);
+  --color-error-800: var(--admin-error-800);
+  --color-error-850: var(--admin-error-850);
+  --color-error-900: var(--admin-error-900);
+  --color-error-950: var(--admin-error-950);
+
+  --theme-bg: var(--admin-base-0);
+  --theme-input-bg: var(--admin-base-0);
+  --theme-text: var(--admin-base-800);
+  --theme-overlay: var(--admin-overlay);
+  --theme-border-color: var(--admin-base-150);
+  --accessibility-outline: 2px solid var(--color-primary);
+  --font-body: var(--font-sans);
+  --style-radius-s: 8px;
+  --style-radius-m: 14px;
+  --style-radius-l: 20px;
+}
+
+html[data-theme='dark'] {
+  --theme-bg: var(--admin-base-900);
+  --theme-input-bg: var(--admin-base-850);
+  --theme-text: var(--color-surface);
+  --theme-overlay: var(--admin-overlay-dark);
+  --theme-border-color: var(--admin-base-750);
+}
+
+/* Medval admin identity */
+@font-face {
+  font-family: Gilroy;
+  font-display: swap;
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/Gilroy-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Gilroy;
+  font-display: swap;
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/Gilroy-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: Gilroy;
+  font-display: swap;
+  font-style: normal;
+  font-weight: 600;
+  src: url('/fonts/Gilroy-SemiBold.woff2') format('woff2');
+}
+
+:root {
+  --font-body: Gilroy, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: Gilroy, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* The login page always uses the dark brand surface. */
+.login {
+  background:
+    radial-gradient(circle at 50% 18%, var(--color-primary-18), transparent 42%),
+    var(--color-secondary-dark);
+}
+
+.login__brand {
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.login__form {
+  padding: clamp(24px, 4vw, 36px);
+  background: color-mix(in srgb, var(--admin-base-900) 62%, transparent);
+  border: 1px solid var(--admin-base-750);
+  border-radius: 24px;
+  box-shadow: 0 28px 72px var(--color-ink-16);
+}
+
+.login .btn--style-primary {
+  color: var(--color-on-primary);
+  background: var(--color-primary);
+}
+
+.login .btn--style-primary:hover {
+  background: var(--color-primary-dark);
+}
+
+.medval-admin-login__hint {
+  margin: 0 0 20px;
+  color: var(--color-surface-78);
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.medval-admin-logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.medval-admin-logo img {
+  width: auto;
+  height: 54px;
+  object-fit: contain;
+}
+
+.medval-admin-logo__light {
+  display: block;
+}
+
+.medval-admin-logo__dark {
+  display: none;
+}
+
+.login .medval-admin-logo__light,
+html[data-theme='dark'] .medval-admin-logo__light {
+  display: none;
+}
+
+.login .medval-admin-logo__dark,
+html[data-theme='dark'] .medval-admin-logo__dark {
+  display: block;
+}
+
+.medval-admin-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.medval-admin-icon img {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
+/* Dashboard welcome and quick actions */
+.medval-admin-intro {
+  display: grid;
+  gap: 28px;
+  margin-bottom: 32px;
+  padding: clamp(24px, 4vw, 40px);
+  color: var(--color-surface);
+  background:
+    radial-gradient(circle at 88% 0%, var(--color-primary-35), transparent 42%),
+    linear-gradient(135deg, var(--color-secondary-dark), var(--color-secondary));
+  border-radius: 24px;
+  box-shadow: 0 24px 64px -32px var(--color-secondary-24);
+}
+
+.medval-admin-intro__copy {
+  display: grid;
+  gap: 12px;
+  max-width: 780px;
+}
+
+.medval-admin-intro__eyebrow {
+  color: var(--color-primary-dark);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.medval-admin-intro h2 {
+  margin: 0;
+  color: var(--color-surface);
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.medval-admin-intro p {
+  margin: 0;
+  color: var(--color-surface-85);
+  font-size: 16px;
+  line-height: 1.55;
+}
+
+.medval-admin-intro__actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+}
+
+.medval-admin-intro__card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  color: var(--color-surface);
+  text-decoration: none;
+  background: var(--color-surface-12);
+  border: 1px solid var(--color-surface-24);
+  border-radius: 16px;
+  transition:
+    transform 0.18s ease,
+    background-color 0.18s ease,
+    border-color 0.18s ease;
+}
+
+.medval-admin-intro__card:hover,
+.medval-admin-intro__card:focus-visible {
+  background: var(--color-surface-24);
+  border-color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.medval-admin-intro__card strong {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.medval-admin-intro__card span {
+  color: var(--color-surface-78);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.medval-admin-intro__site {
+  justify-self: start;
+  color: var(--color-primary-dark);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.medval-admin-intro__site:hover {
+  color: var(--color-surface);
+}
+
+@media (max-width: 768px) {
+  .medval-admin-intro {
+    gap: 22px;
+    padding: 24px 20px;
+    border-radius: 18px;
+  }
+
+  .medval-admin-intro__actions {
+    grid-template-columns: 1fr;
+  }
+
+  .medval-admin-logo img {
+    height: 44px;
+  }
+}

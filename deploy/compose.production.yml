@@ -1,0 +1,17 @@
+# The production reverse proxy runs in Docker on this existing network.
+# Keep Mongo on the private default network; only the app joins the proxy.
+services:
+  web:
+    networks:
+      default: {}
+      proxy:
+        aliases:
+          - medval-ve-web
+          # Existing Nginx Proxy Manager host for medval-ve.aaron-henriquez.com
+          # still points at this alias; keep both so either name resolves.
+          - medval-web-ve
+
+networks:
+  proxy:
+    external: true
+    name: nginx_default

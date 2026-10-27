@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Medval · antes y después verificable · #164</title>
+    <style>
+      :root {
+        font-family: system-ui, sans-serif;
+        color: #242343;
+        background: #f4f3f8;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+      }
+      main {
+        width: min(1520px, 100%);
+        margin: auto;
+        padding: clamp(16px, 3vw, 48px);
+      }
+      h1 {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        margin: 0 0 12px;
+      }
+      h2 {
+        font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+        margin: 48px 0 12px;
+      }
+      h3 {
+        font-size: 1.25rem;
+        margin: 0 0 8px;
+      }
+      p {
+        line-height: 1.6;
+      }
+      a {
+        color: #343076;
+      }
+      code,
+      pre {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      }
+      .eyebrow {
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        color: #aa5725;
+      }
+      .facts,
+      .pair {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+      .facts article,
+      .shot,
+      .note,
+      .table-wrap {
+        background: white;
+        border: 1px solid #dcd9e9;
+        border-radius: 16px;
+        padding: 20px;
+      }
+      .facts article p {
+        margin: 8px 0;
+      }
+      .note {
+        background: #fff4e9;
+        border-color: #eba76c;
+        margin-top: 18px;
+      }
+      .shot {
+        min-width: 0;
+      }
+      .shot p {
+        margin: 0 0 12px;
+        color: #585673;
+      }
+      .shot a img {
+        display: block;
+        width: 100%;
+        height: auto;
+        border: 1px solid #dcd9e9;
+        border-radius: 8px;
+      }
+      .full {
+        max-height: 900px;
+        overflow: auto;
+      }
+      .mobile a img {
+        max-width: 390px;
+        margin: 0 auto;
+      }
+      .table-wrap {
+        overflow-x: auto;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        line-height: 1.5;
+      }
+      th,
+      td {
+        text-align: left;
+        vertical-align: top;
+        padding: 12px;
+        border-bottom: 1px solid #e7e5ef;
+      }
+      th {
+        background: #f3f1f9;
+      }
+      td:first-child {
+        width: 19%;
+        font-weight: 700;
+      }
+      td:nth-child(2),
+      td:nth-child(3) {
+        width: 40.5%;
+      }
+      pre {
+        overflow-x: auto;
+        background: #242343;
+        color: white;
+        padding: 16px;
+        border-radius: 8px;
+        line-height: 1.6;
+      }
+      @media (max-width: 760px) {
+        .facts,
+        .pair {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Comparación auditable · solicitud #164</p>
+      <h1>Medval: antes y después</h1>
+      <p>
+        Corte solicitado:
+        <strong>martes 20 de octubre de 2026, 13:00:00 de Venezuela (UTC−04)</strong>. El último
+        commit de la rama de trabajo <code>fix/home-story-flow</code> anterior a ese corte es
+        <code>475b3ec</code>. El release posterior es <code>fba4766</code>.
+      </p>
+      <div class="facts">
+        <article>
+          <h3>
+            ANTES · commit
+            <a
+              href="https://github.com/aaronx3011/medval-landing/commit/475b3ec48dc62316fb595033af857451529f6aea"
+              >475b3ec</a
+            >
+          </h3>
+          <p><strong>16 oct 2026 · 22:52:58 VET</strong> (autor y commit).</p>
+          <p>
+            Última ejecución de
+            <a href="https://github.com/aaronx3011/medval-landing/actions/runs/38996650486"
+              >despliegue de producción registrada</a
+            >: commit 475b3ec, iniciada el 16 oct · 22:53:09 VET, exitosa.
+          </p>
+        </article>
+        <article>
+          <h3>
+            DESPUÉS · commit
+            <a
+              href="https://github.com/aaronx3011/medval-landing/commit/fba4766ad5a44e555d34f912998f65f599037934"
+              >fba4766</a
+            >
+          </h3>
+          <p><strong>20 oct 2026 · 17:37:31 VET</strong> (autor y commit; merge del PR #167).</p>
+          <p>
+            <a href="https://github.com/aaronx3011/medval-landing/actions/runs/39501873722"
+              >Despliegue de staging</a
+            >: commit fba4766, iniciado el 20 oct · 17:37:35 VET, exitoso. No es un despliegue de
+            producción.
+          </p>
+        </article>
+      </div>
+      <div class="note">
+        <strong>Qué son estas fotos:</strong> capturas <em>locales</em> de ambos árboles Git en el
+        mismo equipo, con la misma base Mongo local, página <code>/es/int</code>, Chromium,
+        movimiento reducido y viewport de <code>1440×900</code> (móvil <code>390×844</code>). No se
+        presentan como capturas directas de los servidores. Se tomaron el
+        <strong>21 oct 2026 entre 14:27 y 14:29 VET</strong>. Las imágenes PNG no están retocadas;
+        haz clic en cada una para verla a resolución original. Las portadas renderizadas pueden
+        tener distinta altura (antes 900 px, después 957 px) aun con el mismo viewport. El pequeño
+        indicador «N» es del servidor Next.js local y aparece en ambas versiones.
+      </div>
+
+      <h2>Portada: misma foto, textos y disposición distintos</h2>
+      <div class="pair">
+        <article class="shot">
+          <h3>ANTES · 475b3ec</h3>
+          <p>16 oct, 22:52:58 VET · 1440 px de ancho</p>
+          <a href="antes-portada.png" target="_blank"
+            ><img
+              src="antes-portada.png"
+              alt="Portada antes: menú de cinco enlaces, cifra +15, foto y CTA"
+          /></a>
+        </article>
+        <article class="shot">
+          <h3>DESPUÉS · fba4766</h3>
+          <p>20 oct, 17:37:31 VET · 1440 px de ancho</p>
+          <a href="despues-portada.png" target="_blank"
+            ><img
+              src="despues-portada.png"
+              alt="Portada después: menú de siete enlaces y misma foto con otra disposición"
+          /></a>
+        </article>
+      </div>
+      <p>
+        <strong>No es una foto nueva:</strong> la portada usa el mismo archivo
+        <code>public/impilo/home/hero/hero-we-care.jpg</code> en ambos commits (blob Git
+        <code>c15a8f35c3b831fc87cf01be31118ba47db520a6</code>). La foto se incorporó en
+        <a href="https://github.com/aaronx3011/medval-landing/commit/2d6a2ca">2d6a2ca</a>, el
+        <strong>14 oct 2026 · 17:19:47 VET</strong>, antes del corte. Lo que sí cambió es el
+        encuadre en el diseño.
+      </p>
+
+      <h2>Página completa: orden de la historia</h2>
+      <p>
+        Desplázate dentro de cada columna o abre cada PNG original. La altura real difiere: antes
+        12.069 px; después 11.204 px.
+      </p>
+      <div class="pair">
+        <article class="shot">
+          <h3>ANTES · 475b3ec</h3>
+          <p>Certificaciones → servicios → especialidades → productos → alianzas → contacto.</p>
+          <div class="full">
+            <a href="antes-pagina-completa.png" target="_blank"
+              ><img src="antes-pagina-completa.png" alt="Página completa antes" loading="lazy"
+            /></a>
+          </div>
+        </article>
+        <article class="shot">
+          <h3>DESPUÉS · fba4766</h3>
+          <p>
+            Sobre Medval → especialidades/productos → servicios → certificaciones/alianzas →
+            contacto.
+          </p>
+          <div class="full">
+            <a href="despues-pagina-completa.png" target="_blank"
+              ><img src="despues-pagina-completa.png" alt="Página completa después" loading="lazy"
+            /></a>
+          </div>
+        </article>
+      </div>
+
+      <h2>Insuficiencia renal: tarjeta abierta</h2>
+      <div class="pair">
+        <article class="shot">
+          <h3>ANTES · 475b3ec</h3>
+          <p>
+            La séptima tarjeta muestra una foto provisional naranja tomada de
+            <code>/api/media/file/medval-services-1-480x300.png</code>.
+          </p>
+          <a href="antes-renal-abierta.png" target="_blank"
+            ><img
+              src="antes-renal-abierta.png"
+              alt="Tarjeta renal antes, abierta con imagen naranja"
+              loading="lazy"
+          /></a>
+        </article>
+        <article class="shot">
+          <h3>DESPUÉS · fba4766</h3>
+          <p>
+            Se quitó la foto provisional de todas las tarjetas. Quedan iconos coherentes y
+            «Ver/Ocultar detalles». No se añadieron siete fotos nuevas.
+          </p>
+          <a href="despues-renal-abierta.png" target="_blank"
+            ><img
+              src="despues-renal-abierta.png"
+              alt="Tarjeta renal después, abierta sin foto"
+              loading="lazy"
+          /></a>
+        </article>
+      </div>
+
+      <h2>Certificaciones: no se inventaron permisos de Miami</h2>
+      <div class="pair">
+        <article class="shot">
+          <h3>ANTES · 475b3ec</h3>
+          <p>Tres tarjetas con SICSME/MPPS, carga nacional y BPDA/ISO.</p>
+          <a href="antes-certificaciones.png" target="_blank"
+            ><img
+              src="antes-certificaciones.png"
+              alt="Certificaciones antes con tres permisos de Venezuela"
+              loading="lazy"
+          /></a>
+        </article>
+        <article class="shot">
+          <h3>DESPUÉS · fba4766</h3>
+          <p>
+            Sección separada «Certificaciones» con texto neutro y sin tarjetas. Las acreditaciones
+            verificadas de Miami siguen pendientes (#164/12).
+          </p>
+          <a href="despues-certificaciones.png" target="_blank"
+            ><img
+              src="despues-certificaciones.png"
+              alt="Certificaciones después sin permisos no verificados"
+              loading="lazy"
+          /></a>
+        </article>
+      </div>
+
+      <h2>Portada móvil · mismo ancho de 390 px</h2>
+      <div class="pair mobile">
+        <article class="shot">
+          <h3>ANTES · 475b3ec</h3>
+          <a href="antes-portada-movil.png" target="_blank"
+            ><img src="antes-portada-movil.png" alt="Portada móvil antes" loading="lazy"
+          /></a>
+        </article>
+        <article class="shot">
+          <h3>DESPUÉS · fba4766</h3>
+          <a href="despues-portada-movil.png" target="_blank"
+            ><img src="despues-portada-movil.png" alt="Portada móvil después" loading="lazy"
+          /></a>
+        </article>
+      </div>
+
+      <h2>Textos: citas literales y comportamiento</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Elemento</th>
+              <th>ANTES · 475b3ec</th>
+              <th>DESPUÉS · fba4766</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Menú</td>
+              <td>Inicio, Certificaciones, Servicios, Alianzas, Contacto.</td>
+              <td>
+                Inicio, Sobre Medval, Especialidades, Servicios, Certificaciones, Alianzas,
+                Contacto.
+              </td>
+            </tr>
+            <tr>
+              <td>Empresa</td>
+              <td>«¿Qué es Medval?»; un párrafo largo.</td>
+              <td>«Sobre Medval»; tres párrafos breves.</td>
+            </tr>
+            <tr>
+              <td>Apoyo del primer mensaje de portada</td>
+              <td>
+                «Acompañamiento cercano y soporte técnico para clínicas, hospitales y
+                profesionales.»
+              </td>
+              <td>
+                «Desde Miami suministramos medicamentos, equipos e insumos a clínicas y hospitales.»
+              </td>
+            </tr>
+            <tr>
+              <td>Cifras</td>
+              <td>+15 en portada, las tres cifras en empresa y de nuevo en contacto.</td>
+              <td>+15, +20 y +500 solo en «Sobre Medval».</td>
+            </tr>
+            <tr>
+              <td>Productos</td>
+              <td>
+                «Soluciones de alta calidad y servicio excepcional.»; marca propia dentro de un
+                párrafo.
+              </td>
+              <td>
+                «Medicamentos, equipos e insumos para quienes cuidan.»; bloque aparte «Nuestra marca
+                propia».
+              </td>
+            </tr>
+            <tr>
+              <td>CTA principales</td>
+              <td>
+                «Contáctanos» en cabecera, después de servicios y en el cierre; «Cotiza ahora» en
+                portada.
+              </td>
+              <td>
+                «Cotiza ahora» en portada, «Solicita información» tras especialidades y «Hablemos»
+                al cierre.
+              </td>
+            </tr>
+            <tr>
+              <td>Alianzas</td>
+              <td>«Alianzas y Casos de Éxito», sin caso real documentado.</td>
+              <td>«Alianzas»; se retiró el bloque de caso no documentado.</td>
+            </tr>
+            <tr>
+              <td>Cierre</td>
+              <td>«¿Listo para dar el siguiente paso hacia una atención médica superior?»</td>
+              <td>
+                «¿Tu institución necesita medicamentos, equipos o insumos? Cuéntanos qué buscas.»
+              </td>
+            </tr>
+            <tr>
+              <td>Formulario</td>
+              <td>El honeypot contiene «No llenar este campo».</td>
+              <td>
+                El honeypot sigue funcionando, pero está oculto con <code>hidden</code> y CSS.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Cómo comprobarlo sin confiar en este informe</h2>
+      <pre>
+git log -1 --before='2026-10-20 13:00:00 -0400' fix/home-story-flow
+git diff --stat 475b3ec fba4766
+git rev-parse 475b3ec:public/impilo/home/hero/hero-we-care.jpg
+git rev-parse fba4766:public/impilo/home/hero/hero-we-care.jpg
+# ejecutar desde docs/comparaciones/164/
+shasum -a 256 -c SHA256SUMS.txt</pre>
+      <p>
+        El diff entre los dos árboles tiene
+        <strong>14 archivos: 410 líneas añadidas y 638 eliminadas</strong>. Las 10 capturas PNG
+        brutas están junto a este HTML; sus hashes están en
+        <a href="SHA256SUMS.txt">SHA256SUMS.txt</a> y el método reproducible en
+        <a href="capture.mjs">capture.mjs</a>. El corte de <code>main</code> aislado habría dado
+        <code>d195aeb</code> (7 oct), porque <code>475b3ec</code> todavía era una rama de trabajo;
+        elegimos esta última porque es el commit pertinente y el último despliegue de producción
+        registrado.
+      </p>
+    </main>
+  </body>
+</html>

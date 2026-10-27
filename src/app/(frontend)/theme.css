@@ -1,0 +1,245 @@
+/*
+ * Home theme configuration.
+ *
+ * Change visual colors, hover treatments, SVG data-URI artwork, and shadows
+ * here. Component styles should consume these tokens instead of color literals.
+ */
+:root {
+  /* Core palette */
+  --color-primary: #e97829;
+  --color-primary-dark: #f5a66b;
+  --color-secondary: #3c3a78;
+  --color-secondary-dark: #1e1c3d;
+  --color-ink: #2a2854;
+  --color-body: #6b6985;
+  --color-surface: #f8f9fa;
+  --color-surface-alt: #f8f9fa;
+  --color-page-bg: #e2e2e2;
+  --color-border: #6b6985;
+  --color-placeholder: #6b6985;
+  --color-input-border-hover: #f5a66b;
+  --color-error: #e97829;
+  --color-error-text: #1e1c3d;
+  --color-whatsapp: #25d366;
+  --color-hero-word-outline: #f5a66b;
+  --color-transparent: transparent;
+  --color-on-primary: var(--color-secondary-dark);
+  --color-on-light: var(--color-ink);
+  --color-on-light-muted: var(--color-body);
+  --color-on-dark: var(--color-surface);
+  --color-on-dark-muted: var(--color-surface);
+  --color-on-status-surface: var(--color-error-text);
+
+  /* Text and surface variants */
+  --color-surface-92: color-mix(in srgb, var(--color-surface) 92%, var(--color-transparent));
+  --color-surface-90: color-mix(in srgb, var(--color-surface) 90%, var(--color-transparent));
+  --color-surface-85: color-mix(in srgb, var(--color-surface) 85%, var(--color-transparent));
+  --color-surface-78: color-mix(in srgb, var(--color-surface) 78%, var(--color-transparent));
+  --color-surface-45: color-mix(in srgb, var(--color-surface) 45%, var(--color-transparent));
+  --color-surface-24: color-mix(in srgb, var(--color-surface) 24%, var(--color-transparent));
+  --color-surface-12: color-mix(in srgb, var(--color-surface) 12%, var(--color-transparent));
+  --color-ink-92: color-mix(in srgb, var(--color-ink) 92%, var(--color-transparent));
+  --color-ink-16: color-mix(in srgb, var(--color-ink) 16%, var(--color-transparent));
+  --color-ink-10: color-mix(in srgb, var(--color-ink) 10%, var(--color-transparent));
+  --color-ink-08: color-mix(in srgb, var(--color-ink) 8%, var(--color-transparent));
+  --color-secondary-20: color-mix(
+    in srgb,
+    var(--color-secondary-dark) 20%,
+    var(--color-transparent)
+  );
+  --color-secondary-72: color-mix(
+    in srgb,
+    var(--color-secondary-dark) 72%,
+    var(--color-transparent)
+  );
+  --color-secondary-24: color-mix(
+    in srgb,
+    var(--color-secondary-dark) 24%,
+    var(--color-transparent)
+  );
+  --color-secondary-18: color-mix(
+    in srgb,
+    var(--color-secondary-dark) 18%,
+    var(--color-transparent)
+  );
+  --color-secondary-16: color-mix(
+    in srgb,
+    var(--color-secondary-dark) 16%,
+    var(--color-transparent)
+  );
+  --color-secondary-12: color-mix(
+    in srgb,
+    var(--color-secondary-dark) 12%,
+    var(--color-transparent)
+  );
+  --color-secondary-08: color-mix(in srgb, var(--color-secondary) 8%, var(--color-transparent));
+  --color-primary-48: color-mix(in srgb, var(--color-primary) 48%, var(--color-transparent));
+  --color-primary-35: color-mix(in srgb, var(--color-primary) 35%, var(--color-transparent));
+  --color-primary-18: color-mix(in srgb, var(--color-primary) 18%, var(--color-transparent));
+  --color-primary-15: color-mix(in srgb, var(--color-primary) 15%, var(--color-transparent));
+  --color-primary-09: color-mix(in srgb, var(--color-primary) 9%, var(--color-transparent));
+  --color-black-45: color-mix(in srgb, var(--color-ink) 45%, var(--color-transparent));
+  --color-black-28: color-mix(in srgb, var(--color-ink) 28%, var(--color-transparent));
+  --color-lavender-shadow: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--color-surface) 59%, var(--color-secondary) 41%) 68%,
+    var(--color-transparent)
+  );
+  --color-purple-shadow: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--color-surface) 38%, var(--color-secondary) 62%) 35%,
+    var(--color-transparent)
+  );
+  --color-purple-outline: color-mix(
+    in srgb,
+    color-mix(in srgb, var(--color-surface) 38%, var(--color-secondary) 62%) 25%,
+    var(--color-transparent)
+  );
+
+  /* Home compatibility aliases */
+  --impilo-blue-01: var(--color-secondary-dark);
+  --impilo-blue-02: var(--color-secondary);
+  --impilo-blue-03: var(--color-secondary);
+  --impilo-blue-04: var(--color-secondary);
+  --impilo-blue-05: var(--color-secondary);
+  --impilo-lavender-01: var(--color-primary);
+  --impilo-lavender-03: var(--color-primary);
+  --impilo-lavender-05: var(--color-surface-alt);
+  --impilo-silver-01: var(--color-border);
+  --impilo-silver-02: var(--color-on-dark-muted);
+  --impilo-silver-03: var(--color-surface-alt);
+  --impilo-white: var(--color-surface);
+  --impilo-bright-blue: var(--color-primary-dark);
+  --impilo-bright-green: var(--color-primary-dark);
+  --impilo-bright-turquoise: var(--color-primary-dark);
+
+  /* Payload admin palette */
+  --admin-base-0: var(--color-surface);
+  --admin-base-50: color-mix(in srgb, var(--color-surface), var(--color-secondary) 4%);
+  --admin-base-100: color-mix(in srgb, var(--color-surface), var(--color-secondary) 8%);
+  --admin-base-150: color-mix(in srgb, var(--color-surface), var(--color-secondary) 13%);
+  --admin-base-200: color-mix(in srgb, var(--color-surface), var(--color-secondary) 18%);
+  --admin-base-250: color-mix(in srgb, var(--color-surface), var(--color-secondary) 25%);
+  --admin-base-300: color-mix(in srgb, var(--color-surface), var(--color-secondary) 33%);
+  --admin-base-350: color-mix(in srgb, var(--color-surface), var(--color-secondary) 42%);
+  --admin-base-400: color-mix(in srgb, var(--color-surface), var(--color-secondary) 52%);
+  --admin-base-450: color-mix(in srgb, var(--color-surface), var(--color-secondary) 64%);
+  --admin-base-500: color-mix(in srgb, var(--color-surface), var(--color-secondary) 76%);
+  --admin-base-550: var(--color-secondary);
+  --admin-base-600: color-mix(in srgb, var(--color-secondary), var(--color-secondary-dark) 20%);
+  --admin-base-650: color-mix(in srgb, var(--color-secondary), var(--color-secondary-dark) 40%);
+  --admin-base-700: color-mix(in srgb, var(--color-secondary), var(--color-secondary-dark) 55%);
+  --admin-base-750: color-mix(in srgb, var(--color-secondary), var(--color-secondary-dark) 70%);
+  --admin-base-800: color-mix(in srgb, var(--color-secondary), var(--color-secondary-dark) 82%);
+  --admin-base-850: color-mix(in srgb, var(--color-secondary), var(--color-secondary-dark) 90%);
+  --admin-base-900: var(--color-secondary-dark);
+  --admin-base-950: var(--color-ink);
+  --admin-base-1000: var(--color-ink);
+
+  --admin-action-50: color-mix(in srgb, var(--color-surface), var(--color-primary) 5%);
+  --admin-action-100: color-mix(in srgb, var(--color-surface), var(--color-primary) 10%);
+  --admin-action-150: color-mix(in srgb, var(--color-surface), var(--color-primary) 18%);
+  --admin-action-200: color-mix(in srgb, var(--color-surface), var(--color-primary) 26%);
+  --admin-action-250: color-mix(in srgb, var(--color-surface), var(--color-primary) 35%);
+  --admin-action-300: color-mix(in srgb, var(--color-surface), var(--color-primary) 45%);
+  --admin-action-350: color-mix(in srgb, var(--color-surface), var(--color-primary) 58%);
+  --admin-action-400: color-mix(in srgb, var(--color-surface), var(--color-primary) 72%);
+  --admin-action-450: color-mix(in srgb, var(--color-surface), var(--color-primary) 86%);
+  --admin-action-500: var(--color-primary);
+  --admin-action-550: color-mix(in srgb, var(--color-primary), var(--color-primary-dark) 30%);
+  --admin-action-600: var(--color-primary-dark);
+  --admin-action-650: color-mix(
+    in srgb,
+    var(--color-primary-dark),
+    var(--color-secondary-dark) 20%
+  );
+  --admin-action-700: color-mix(
+    in srgb,
+    var(--color-primary-dark),
+    var(--color-secondary-dark) 40%
+  );
+  --admin-action-750: color-mix(
+    in srgb,
+    var(--color-primary-dark),
+    var(--color-secondary-dark) 55%
+  );
+  --admin-action-800: color-mix(
+    in srgb,
+    var(--color-primary-dark),
+    var(--color-secondary-dark) 70%
+  );
+  --admin-action-850: color-mix(
+    in srgb,
+    var(--color-primary-dark),
+    var(--color-secondary-dark) 82%
+  );
+  --admin-action-900: color-mix(in srgb, var(--color-primary-dark), var(--color-ink) 50%);
+  --admin-action-950: color-mix(in srgb, var(--color-primary-dark), var(--color-ink) 75%);
+
+  --admin-error-50: color-mix(in srgb, var(--color-surface), var(--color-error) 5%);
+  --admin-error-100: color-mix(in srgb, var(--color-surface), var(--color-error) 10%);
+  --admin-error-150: color-mix(in srgb, var(--color-surface), var(--color-error) 18%);
+  --admin-error-200: color-mix(in srgb, var(--color-surface), var(--color-error) 26%);
+  --admin-error-250: color-mix(in srgb, var(--color-surface), var(--color-error) 35%);
+  --admin-error-300: color-mix(in srgb, var(--color-surface), var(--color-error) 45%);
+  --admin-error-350: color-mix(in srgb, var(--color-surface), var(--color-error) 58%);
+  --admin-error-400: color-mix(in srgb, var(--color-surface), var(--color-error) 72%);
+  --admin-error-450: color-mix(in srgb, var(--color-surface), var(--color-error) 86%);
+  --admin-error-500: var(--color-error);
+  --admin-error-550: color-mix(in srgb, var(--color-error), var(--color-ink) 15%);
+  --admin-error-600: color-mix(in srgb, var(--color-error), var(--color-ink) 25%);
+  --admin-error-650: color-mix(in srgb, var(--color-error), var(--color-ink) 35%);
+  --admin-error-700: color-mix(in srgb, var(--color-error), var(--color-ink) 45%);
+  --admin-error-750: color-mix(in srgb, var(--color-error), var(--color-ink) 55%);
+  --admin-error-800: color-mix(in srgb, var(--color-error), var(--color-ink) 65%);
+  --admin-error-850: color-mix(in srgb, var(--color-error), var(--color-ink) 75%);
+  --admin-error-900: color-mix(in srgb, var(--color-error), var(--color-ink) 85%);
+  --admin-error-950: color-mix(in srgb, var(--color-error), var(--color-ink) 92%);
+  --admin-overlay: color-mix(in srgb, var(--color-ink) 58%, var(--color-transparent));
+  --admin-overlay-dark: color-mix(in srgb, var(--color-ink) 78%, var(--color-transparent));
+
+  /* Gradients and embedded SVG artwork */
+  --gradient-hero-overlay: linear-gradient(
+    180deg,
+    var(--color-ink-10) 0%,
+    var(--color-secondary-72) 100%
+  );
+  --gradient-primary-button: linear-gradient(
+    135deg,
+    var(--color-primary) 0%,
+    var(--color-primary-dark) 100%
+  );
+  --gradient-quote:
+    radial-gradient(900px 400px at 15% 0%, var(--color-primary-18), var(--color-transparent) 55%),
+    var(--color-secondary-dark);
+  --filter-svg-hover: brightness(0.65) saturate(2);
+
+  /* Shadows */
+  --shadow-card: 0 12px 32px var(--color-ink-08);
+  --shadow-float: 0 18px 48px var(--color-ink-16);
+  --shadow-header: 0 8px 28px var(--color-secondary-20);
+  --shadow-header-demo:
+    0 1px 4px var(--color-black-45), 0 -1px 3px var(--impilo-lavender-03) inset,
+    0 0 0 1px var(--color-primary-35);
+  --shadow-header-demo-hover:
+    0 4px 12px var(--color-black-28), 0 -1px 3px var(--impilo-lavender-03) inset,
+    0 0 0 1px var(--color-primary-48);
+  --shadow-mobile-nav: 0 16px 32px var(--color-secondary-24);
+  --shadow-pill: 0 2px 8px var(--color-secondary-12);
+  --shadow-button-inner:
+    0 1px 4px var(--color-black-45), 0 -1px 3px var(--impilo-lavender-03) inset;
+  --shadow-arrow:
+    0 -1px 1px var(--impilo-white) inset, 0 2px 5px var(--color-lavender-shadow),
+    0 0 0 1px var(--color-purple-outline);
+  --shadow-arrow-hover:
+    0 -1px 1px var(--impilo-white) inset, 0 4px 12px var(--color-purple-shadow),
+    0 0 0 1px var(--color-purple-outline);
+
+  --header-height: 112px;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-height: 76px;
+  }
+}

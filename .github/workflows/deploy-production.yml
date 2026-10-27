@@ -1,0 +1,21 @@
+name: Deploy production
+
+on:
+  workflow_dispatch: # pick a branch or tag in the "Run workflow" menu
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: [self-hosted, docker]
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./deploy/deploy.sh production
+        env:
+          DEPLOY_HOST: ${{ vars.DEPLOY_HOST }}
+          DEPLOY_SSH_PORT: ${{ vars.DEPLOY_SSH_PORT }}
+          NEXT_PUBLIC_SERVER_URL: ${{ vars.NEXT_PUBLIC_SERVER_URL }}
+          NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID }}

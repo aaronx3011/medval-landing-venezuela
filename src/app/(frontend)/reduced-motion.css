@@ -1,0 +1,28 @@
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .impilo-specialties__chip,
+  .impilo-specialties__chip.is-highlighted,
+  .lab-float,
+  .lab-pulse {
+    animation: none;
+  }
+
+  .impilo-home,
+  .impilo-home *,
+  .impilo-home *::before,
+  .impilo-home *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .impilo-home.is-animated [data-impilo-section],
+  .impilo-home.is-animated [data-impilo-svg],
+  .impilo-home.is-animated [data-reveal] {
+    opacity: 1;
+    transform: none;
+    clip-path: none;
+  }
+}

@@ -1,0 +1,31 @@
+name: medval-ve-runner
+
+services:
+  runner:
+    build:
+      context: .
+      args:
+        # Match the host's /var/run/docker.sock group id.
+        DOCKER_GID: ${DOCKER_GID:-999}
+    image: medval-ve-github-runner:latest
+    container_name: medval-ve-runner
+    restart: unless-stopped
+    # Host networking keeps the VPN (10.8.0.0/…) reachable for SSH deploys
+    # exactly as from the host itself.
+    network_mode: host
+    environment:
+      RUNNER_URL: ${RUNNER_URL:-https://github.com/aaronx3011/medval-landing-venezuela}
+      RUNNER_TOKEN: ${RUNNER_TOKEN:-only-needed-on-first-registration}
+      RUNNER_NAME: ${RUNNER_NAME:-medval-ve-runner-1}
+      RUNNER_LABELS: ${RUNNER_LABELS:-medval-ve,docker}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Deploy key + known_hosts shared with the other CI runners.
+      - /srv/runner-ssh:/home/runner/.ssh
+      # Persist the registration (.runner/.credentials) across recreations.
+      - runner_config:/opt/actions-runner
+      - runner_work:/work
+
+volumes:
+  runner_config:
+  runner_work:

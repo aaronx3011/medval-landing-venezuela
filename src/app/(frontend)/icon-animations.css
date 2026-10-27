@@ -1,0 +1,1191 @@
+/*
+ * Per-icon choreography for the traced icons in /icons, implemented from the
+ * specs in icons/<nn>-*.md. Fill-safe only: wipes (clip-path), transforms,
+ * opacity and fx overlays — the traced SVGs have no strokes or groups yet.
+ * Timing tokens (README): intro 350-700ms ease-out (overshoot
+ * cubic-bezier(.34,1.56,.64,1)); out 300-400ms ease-in; stay 2.5-4s;
+ * event loops every 5-8s.
+ */
+
+.icona {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.icona-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  width: var(--icona-size, 96px);
+  opacity: 1;
+}
+
+.icona-stage img {
+  width: 100%;
+  height: auto;
+}
+
+.icona-stage.is-in,
+.icona-stage.is-stay {
+  opacity: 1;
+}
+
+.icona-fx {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.icona-replay {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  color: var(--color-on-light-muted);
+  font-size: 15px;
+  background: var(--impilo-white);
+  border: 1px solid var(--impilo-lavender-03);
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.icona-replay:hover {
+  color: var(--impilo-blue-02);
+  border-color: var(--impilo-blue-04);
+}
+
+.icona-replay:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.icona-phase {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  padding: 2px 10px;
+  color: var(--color-on-light-muted);
+  font-family: ui-monospace, monospace;
+  font-size: 11px;
+  background: var(--impilo-white);
+  border: 1px solid var(--impilo-lavender-03);
+  border-radius: 999px;
+  transform: translateX(-50%);
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.icona-phase[data-phase='in'] {
+  color: var(--impilo-blue-02);
+  border-color: var(--impilo-bright-turquoise);
+}
+
+.icona-phase[data-phase='stay'] {
+  color: var(--color-on-light);
+  border-color: var(--impilo-bright-green);
+}
+
+.icona-phase[data-phase='out'] {
+  color: var(--impilo-blue-02);
+  border-color: var(--impilo-bright-blue);
+}
+
+/* ---------- stay loops ---------- */
+
+@keyframes icona-sway {
+  from {
+    transform: rotate(calc(-2deg * var(--icona-amp, 1)));
+  }
+
+  to {
+    transform: rotate(calc(2deg * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-heartbeat {
+  0%,
+  18%,
+  100% {
+    transform: scale(1);
+  }
+
+  5% {
+    transform: scale(calc(1 + 0.06 * var(--icona-amp, 1)));
+  }
+
+  10% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(calc(1 + 0.04 * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-heartbeat-soft {
+  0%,
+  18%,
+  100% {
+    transform: scale(1);
+  }
+
+  5% {
+    transform: scale(calc(1 + 0.03 * var(--icona-amp, 1)));
+  }
+
+  10% {
+    transform: scale(1);
+  }
+
+  14% {
+    transform: scale(calc(1 + 0.02 * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-peristalsis {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(calc(1 + 0.03 * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-float-y {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(calc(-2px * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-bob {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(calc(-1px * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-wobble {
+  from {
+    transform: rotate(calc(-1.5deg * var(--icona-amp, 1)));
+  }
+
+  to {
+    transform: rotate(calc(1.5deg * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-rock {
+  from {
+    transform: rotate(calc(-4deg * var(--icona-amp, 1)));
+  }
+
+  to {
+    transform: rotate(calc(4deg * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-gear-idle {
+  from {
+    transform: rotate(calc(-10deg * var(--icona-amp, 1)));
+  }
+
+  to {
+    transform: rotate(calc(10deg * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-pulse-soft {
+  from {
+    transform: scale(1);
+  }
+
+  to {
+    transform: scale(calc(1 + 0.03 * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-nudge7 {
+  0%,
+  93%,
+  100% {
+    transform: translate(0, 0);
+  }
+
+  95% {
+    transform: translate(1px, -1px);
+  }
+
+  97% {
+    transform: translate(0, 0);
+  }
+}
+
+@keyframes icona-pull7 {
+  0%,
+  88%,
+  100% {
+    transform: translateX(0);
+  }
+
+  93% {
+    transform: translateX(4px);
+  }
+
+  97% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes icona-remeasure5 {
+  0%,
+  86%,
+  100% {
+    transform: rotate(0);
+  }
+
+  90% {
+    transform: rotate(-1deg);
+  }
+
+  95% {
+    transform: rotate(1deg);
+  }
+}
+
+@keyframes icona-glint {
+  0%,
+  88%,
+  100% {
+    opacity: 0;
+    transform: translateX(-220%) skewX(-18deg);
+  }
+
+  91% {
+    opacity: 0.85;
+  }
+
+  97% {
+    opacity: 0;
+    transform: translateX(220%) skewX(-18deg);
+  }
+}
+
+@keyframes icona-ripple {
+  0%,
+  88%,
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(0.3);
+  }
+
+  90% {
+    opacity: 0.7;
+  }
+
+  98% {
+    opacity: 0;
+    transform: translate(-50%, 0) scale(1);
+  }
+}
+
+@keyframes icona-droplet {
+  0%,
+  90%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.4);
+  }
+
+  92% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  97% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.8);
+  }
+}
+
+/* out phases */
+
+@keyframes icona-out-fade {
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+@keyframes icona-out-drop {
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+@keyframes icona-out-drop-sm {
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes icona-out-drift {
+  to {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+@keyframes icona-out-spin {
+  to {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+}
+
+@keyframes icona-out-drive {
+  to {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+}
+
+@keyframes icona-out-drip {
+  to {
+    opacity: 0;
+    transform: scaleY(1.2);
+  }
+}
+
+@keyframes icona-out-diagonal {
+  to {
+    opacity: 0;
+    transform: translate(30px, -30px);
+  }
+}
+
+@keyframes icona-out-shrink-x {
+  to {
+    opacity: 0;
+    transform: scale(0.94, 1);
+  }
+}
+
+@keyframes icona-out-fold {
+  to {
+    opacity: 0;
+    transform: scaleY(0.94) translateY(6px);
+  }
+}
+
+@keyframes icona-out-wipe-rev {
+  to {
+    clip-path: inset(0 0 100% 0);
+  }
+}
+
+@keyframes icona-out-retract {
+  to {
+    clip-path: inset(0 100% 0 0);
+    opacity: 0;
+  }
+}
+
+/* ---------- inline SVG (grouped re-exports) ---------- */
+
+.icona-inline svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.icona-inline path {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+/*
+ * Self-assembly intro: every ungrouped path wipes in after its `--i`
+ * stagger slot (alternating directions), the accent path pops last with
+ * overshoot. Grouped paths (`icona-grouped`, inside bespoke sub-groups)
+ * have their own per-icon choreography.
+ */
+.icona-stage.is-in .icona-inline path:not(.icona-grouped) {
+  animation: icona-path-wipe 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * var(--icona-step, 90ms));
+}
+
+.icona-stage.is-in .icona-inline path:not(.icona-grouped):nth-child(odd) {
+  animation-name: icona-path-wipe-alt;
+}
+
+.icona-stage.is-in .icona-inline path:not(.icona-grouped).icona-accent {
+  animation-name: icona-accent-pop;
+  animation-duration: 0.5s;
+  animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.icona-inline .icona-accent {
+  fill: var(--impilo-bright-turquoise);
+}
+
+/* the accent breathes during the stay — a calm attention pulse */
+.icona-stage.is-stay .icona-inline .icona-accent {
+  animation: icona-accent-breathe 6s ease-in-out infinite;
+}
+
+@keyframes icona-path-wipe {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes icona-path-wipe-alt {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes icona-accent-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes icona-accent-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.72;
+  }
+}
+
+/* ---------- per-icon phases (01-21; 08 has no SVG) ---------- */
+
+/* 01 · Awareness ribbon — sway on the loop pin (intro via path stagger) */
+.icona-01.is-stay {
+  animation: icona-sway 4s ease-in-out infinite alternate;
+  transform-origin: 50% 15%;
+}
+
+.icona-01.is-out {
+  animation: icona-out-wipe-rev 0.3s ease-in both;
+}
+
+/* 02 · Heart + ECG — grouped re-export: the heart beats and the ECG line
+   writes itself. The crawl keyframe extends the head while the tail erases
+   (constant-length trace, like a monitor). transform-box: fill-box anchors
+   origins/clip to each group's own box (the parent g flips the y-axis). */
+.icona-02 #heart,
+.icona-02 #ecg {
+  transform-box: fill-box;
+}
+
+.icona-02 #heart {
+  transform-origin: 50% 50%;
+}
+
+.icona-02 #ecg {
+  fill: var(--impilo-bright-turquoise);
+}
+
+.icona-02.is-in #heart {
+  animation:
+    icona-heart-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both,
+    icona-heart-thump 0.3s ease-out 0.55s forwards;
+}
+
+.icona-02.is-in #ecg {
+  animation: icona-ecg-write 0.5s linear 0.25s both;
+}
+
+.icona-02.is-stay #heart {
+  animation: icona-heartbeat 1.6s linear infinite;
+}
+
+.icona-02.is-stay #ecg {
+  animation: icona-ecg-crawl 1.6s linear infinite;
+}
+
+.icona-02.is-out #heart {
+  animation: icona-out-fade 0.35s ease-in both;
+}
+
+.icona-02.is-out #ecg {
+  animation: icona-ecg-flatline 0.35s ease-in both;
+}
+
+@keyframes icona-heart-in {
+  from {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  70% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes icona-heart-thump {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes icona-ecg-write {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes icona-ecg-crawl {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+
+  50% {
+    clip-path: inset(0 0 0 0);
+  }
+
+  100% {
+    clip-path: inset(0 0 0 100%);
+  }
+}
+
+@keyframes icona-ecg-flatline {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+/* 03 · Lungs — breathing: bigger + faster, like actual breathing (~4s per
+   full breath) */
+.icona-03.is-stay {
+  animation: icona-lungs-breathe 2s ease-in-out infinite alternate;
+}
+
+.icona-03.is-out {
+  animation: icona-lungs-out 0.3s ease-in both;
+}
+
+@keyframes icona-lungs-breathe {
+  from {
+    transform: scale(1) translateY(0);
+  }
+
+  to {
+    transform: scale(calc(1 + 0.1 * var(--icona-amp, 1)))
+      translateY(calc(-2px * var(--icona-amp, 1)));
+  }
+}
+
+@keyframes icona-lungs-out {
+  to {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}
+
+/* 04 · Stomach — peristalsis */
+.icona-04.is-stay {
+  animation: icona-peristalsis 2.5s ease-in-out infinite;
+}
+
+.icona-04.is-out {
+  animation: icona-out-drift 0.35s ease-in both;
+}
+
+/* 05 · Shield cross — float; the shine sweeps every ~3s and the shield
+   swells while it shines (shine + bump share the same 3s clock) */
+.icona-05.is-stay {
+  animation: icona-shield-stay 3s ease-in-out infinite;
+}
+
+.icona-05.is-stay .icona-fx-main::after {
+  content: '';
+  position: absolute;
+  top: -25%;
+  left: 28%;
+  width: 44%;
+  height: 14%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(255, 255, 255, 0.95) 45%,
+    rgba(255, 255, 255, 0.9) 60%,
+    transparent
+  );
+  border-radius: 50% 50% 60% 60% / 45% 45% 55% 55%;
+  opacity: 0;
+  transform: translateY(0);
+  animation: icona-glint 3s linear infinite;
+}
+
+.icona-05.is-out {
+  animation: icona-out-drop 0.3s ease-in both;
+}
+
+/* the drop falls top → bottom down the shield face */
+@keyframes icona-glint {
+  0%,
+  88%,
+  100% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+
+  91% {
+    opacity: 0.9;
+  }
+
+  97% {
+    opacity: 0;
+    transform: translateY(1100%);
+  }
+}
+
+@keyframes icona-shield-stay {
+  0%,
+  84%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+
+  50% {
+    transform: translateY(-2px) scale(1);
+  }
+
+  92% {
+    transform: translateY(0) scale(calc(1 + 0.07 * var(--icona-amp, 1)));
+  }
+}
+
+/* 06 · Drop plus — wobble on the tip + ripple */
+.icona-06.is-stay {
+  animation: icona-wobble 3s ease-in-out infinite alternate;
+  transform-origin: 50% 0%;
+}
+
+.icona-06.is-stay .icona-fx-main::after {
+  content: '';
+  position: absolute;
+  bottom: 6%;
+  left: 50%;
+  width: 64%;
+  aspect-ratio: 1;
+  border: 2px solid var(--impilo-blue-02);
+  border-radius: 50%;
+  opacity: 0;
+  transform: translate(-50%, 0) scale(0.3);
+  animation: icona-ripple 6s ease-out infinite;
+}
+
+.icona-06.is-out {
+  animation: icona-out-drip 0.35s ease-in both;
+  transform-origin: 50% 100%;
+}
+
+/* 07 · Kidneys — filtration pulse (alternating needs the kidneys split
+   into their own groups) */
+.icona-07.is-stay {
+  animation: icona-pulse-soft 3s ease-in-out infinite alternate;
+}
+
+.icona-07.is-out {
+  animation: icona-out-shrink-x 0.3s ease-in both;
+}
+
+/* 09 · Cold-chain truck — drives in with suspension settle; idle bob;
+   the cargo snowflake spins (refrigeration active) + flakes drift down */
+.icona-09 #flake path {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.icona-09 #flake .icona-accent {
+  fill: var(--impilo-bright-turquoise);
+}
+
+.icona-09.is-in #flake path {
+  animation: icona-flake-in 0.3s ease-out 0.3s both;
+}
+
+.icona-09.is-stay #flake path {
+  animation: icona-flake-spin 8s linear infinite;
+}
+
+.icona-09.is-stay {
+  animation: icona-bob 2.5s ease-in-out infinite;
+}
+
+.icona-09.is-out {
+  animation: icona-out-drive 0.4s ease-in both;
+}
+
+@keyframes icona-flake-in {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.8);
+  }
+
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
+}
+
+@keyframes icona-flake-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* White flakes fall through the truck to just below the wheels (~78% of
+   the SVG height). Percentage positions scale with the icon, unlike px. */
+.icona-09 .icona-fx-snow::before,
+.icona-09 .icona-fx-snow::after,
+.icona-09 .icona-fx-snow2::before,
+.icona-09 .icona-fx-snow2::after {
+  content: '';
+  position: absolute;
+  top: -6%;
+  left: 22%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--impilo-white);
+  opacity: 0;
+  animation: icona-snow-fall 3s linear infinite;
+}
+
+.icona-09 .icona-fx-snow::before {
+  left: 33%;
+  width: 3px;
+  height: 3px;
+  animation-delay: 0.7s;
+}
+
+.icona-09 .icona-fx-snow2::after {
+  left: 44%;
+  width: 4px;
+  height: 4px;
+  animation-delay: 1.4s;
+}
+
+.icona-09 .icona-fx-snow2::before {
+  left: 60%;
+  width: 4px;
+  height: 4px;
+  animation-delay: 2.1s;
+}
+
+@keyframes icona-snow-fall {
+  0% {
+    opacity: 0;
+    top: -6%;
+    transform: translateX(0);
+  }
+
+  12% {
+    opacity: 0.85;
+  }
+
+  50% {
+    opacity: 0.85;
+    transform: translateX(-3px);
+  }
+
+  95% {
+    opacity: 0.85;
+    top: 78%;
+    transform: translateX(2px);
+  }
+
+  100% {
+    opacity: 0;
+    top: 78%;
+    transform: translateX(2px);
+  }
+}
+
+/* 10 · Presenter — the trend arrow is highlighted and writes itself
+   left→right AFTER the rest of the icon finishes assembling, then the whole
+   icon nudges. Faster than the set: quicker assembly (55ms steps, 0.3s
+   wipes) and a snappier 0.4s write starting at 0.9s */
+.icona-10 #arrow path {
+  transform-box: fill-box;
+}
+
+.icona-stage.icona-10.is-in .icona-inline > g > path {
+  animation-duration: 0.3s;
+  animation-delay: calc(var(--i, 0) * 55ms);
+}
+
+.icona-10.is-in #arrow path {
+  animation: icona-ecg-write 0.4s linear both;
+  animation-delay: 0.9s;
+}
+
+.icona-10.is-stay {
+  animation: icona-nudge7 7s linear infinite;
+}
+
+.icona-10.is-out {
+  animation: icona-out-retract 0.35s ease-in both;
+}
+
+/* 11 · Gear wrench — only the outer gear rotates; the white inner ring and
+   orange wrench stay still. The hand-drawn paths use transparent strokes. */
+.icona-stage.icona-11.is-in .icona-inline path {
+  animation: icona-path-wipe 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * var(--icona-step, 90ms));
+}
+
+.icona-stage.icona-11.is-in .icona-inline path:nth-child(odd) {
+  animation-name: icona-path-wipe-alt;
+}
+
+.icona-11 #wrench path {
+  /* The shared accent rule fills traced icons; this wrench is stroke-only. */
+  fill: none;
+}
+
+.icona-11 #gear path {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.icona-11.is-stay #gear path {
+  animation: icona-gear-idle 4s ease-in-out infinite alternate;
+}
+
+.icona-11.is-out {
+  animation: icona-out-spin 0.35s ease-in both;
+}
+
+/* 12 · Gear medtools — same as 11: only the BACK GEAR rotates (the light
+   gear-fill cutout rotates with it), the crossed tools in front stay still.
+   Grouped paths → 12 carries its own stagger copy for the intro */
+.icona-stage.icona-12.is-in .icona-inline path {
+  animation: icona-path-wipe 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * var(--icona-step, 90ms));
+}
+
+.icona-stage.icona-12.is-in .icona-inline path:nth-child(odd) {
+  animation-name: icona-path-wipe-alt;
+}
+
+.icona-12 #gear {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+}
+
+.icona-12.is-stay #gear {
+  animation: icona-gear-idle 4s ease-in-out infinite alternate;
+}
+
+.icona-12.is-out {
+  animation: icona-out-spin 0.35s ease-in both;
+}
+
+/* 13 · Hospital boxes — inventory bob */
+.icona-13.is-stay {
+  animation: icona-bob 3s ease-in-out infinite;
+}
+
+.icona-13.is-out {
+  animation: icona-out-drop-sm 0.35s ease-in both;
+}
+
+/* 14 · Globe plane — the globe assembles, then the PLANE FLIES the dotted
+   route from its start (off-screen left) to its position — left to right —
+   landing exactly at translate(0,0) = its natural spot (where the ghost
+   plane used to be). The flight is a transform keyframe path through the
+    dots' positions (offset-path's anchor resolution displaced the plane —
+    avoid it). The dots' slots live on the same quadratic curve (build script) and
+   each dot pops as the plane passes. ~2.4s intro */
+.icona-14 #plane path,
+.icona-14 #route path {
+  transform-box: fill-box;
+}
+
+.icona-14 #route path {
+  transform-origin: 50% 50%;
+}
+
+.icona-stage.icona-14.is-in .icona-inline #globe path {
+  animation: icona-path-wipe 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 80ms);
+}
+
+.icona-14.is-in #plane path {
+  animation: icona-plane-fly 0.8s linear 1s both;
+}
+
+/* each dot pops exactly when the plane passes its slot: the flight runs
+   1s → 1.8s linearly, so a dot at curve parameter --phi appears at
+   1s + phi × 0.8s — the trail forms behind the plane, gapless */
+.icona-14.is-in #route path {
+  animation: icona-accent-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: calc(1s + var(--phi, 0) * 0.8s);
+}
+
+/* Sample M -50,315 Q 75,425 235,221 at 1/16 intervals, relative to
+   the plane's natural center (235,221). SVG px use viewBox coordinates. */
+@keyframes icona-plane-fly {
+  0% {
+    opacity: 0;
+    transform: translate(-285px, 94px);
+  }
+
+  6.25% {
+    transform: translate(-269.24px, 106.52px);
+  }
+
+  12.5% {
+    transform: translate(-253.2px, 116.59px);
+  }
+
+  15% {
+    opacity: 1;
+  }
+
+  18.75% {
+    transform: translate(-236.89px, 124.21px);
+  }
+
+  25% {
+    transform: translate(-220.31px, 129.38px);
+  }
+
+  31.25% {
+    transform: translate(-203.46px, 132.09px);
+  }
+
+  37.5% {
+    transform: translate(-186.33px, 132.34px);
+  }
+
+  43.75% {
+    transform: translate(-168.93px, 130.15px);
+  }
+
+  50% {
+    transform: translate(-151.25px, 125.5px);
+  }
+
+  56.25% {
+    transform: translate(-133.3px, 118.4px);
+  }
+
+  62.5% {
+    transform: translate(-115.08px, 108.84px);
+  }
+
+  68.75% {
+    transform: translate(-96.58px, 96.84px);
+  }
+
+  75% {
+    transform: translate(-77.81px, 82.38px);
+  }
+
+  81.25% {
+    transform: translate(-58.77px, 65.46px);
+  }
+
+  87.5% {
+    transform: translate(-39.45px, 46.09px);
+  }
+
+  93.75% {
+    transform: translate(-19.86px, 24.27px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
+
+.icona-14.is-stay {
+  animation: icona-sway 8s ease-in-out infinite alternate;
+}
+
+.icona-14.is-out {
+  animation: icona-out-fade 0.4s ease-in both;
+}
+
+/* 15 · Shield document — float */
+.icona-15.is-stay {
+  animation: icona-float-y 3.5s ease-in-out infinite;
+}
+
+.icona-15.is-out {
+  animation: icona-out-fold 0.35s ease-in both;
+  transform-origin: 50% 0%;
+}
+
+/* 16 · Capsule tablet — gentle rock */
+.icona-16.is-stay {
+  animation: icona-rock 3s ease-in-out infinite alternate;
+}
+
+.icona-16.is-out {
+  animation: icona-out-spin 0.35s ease-in both;
+}
+
+/* 17 · Syringe — float + droplet */
+.icona-17.is-stay {
+  animation: icona-float-y 3s ease-in-out infinite;
+}
+
+.icona-17.is-stay .icona-fx-main::after {
+  content: '';
+  position: absolute;
+  bottom: 18%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  margin-left: -4px;
+  background: var(--impilo-blue-02);
+  border-radius: 50%;
+  opacity: 0;
+  animation: icona-droplet 5s ease-in infinite;
+}
+
+.icona-17.is-out {
+  animation: icona-out-diagonal 0.3s ease-in both;
+}
+
+/* 18 · Thermometer — periodic re-measure wiggle */
+.icona-18.is-stay {
+  animation: icona-remeasure5 5s ease-in-out infinite;
+}
+
+.icona-18.is-out {
+  animation: icona-out-diagonal 0.35s ease-in both;
+}
+
+/* 19 · First aid kit — float */
+.icona-19.is-stay {
+  animation: icona-float-y 3s ease-in-out infinite;
+}
+
+.icona-19.is-out {
+  animation: icona-out-drop-sm 0.35s ease-in both;
+}
+
+/* 20 · Gauze roll — periodic unroll nudge */
+.icona-20.is-stay {
+  animation: icona-pull7 7s ease-in-out infinite;
+}
+
+.icona-20.is-out {
+  animation: icona-out-retract 0.35s ease-in both;
+}
+
+/* 21 · Stethoscope — soft heartbeat on the loop (cord draw needs a stroke
+   re-export) */
+.icona-21.is-stay {
+  animation: icona-heartbeat-soft 1.6s linear infinite;
+}
+
+.icona-21.is-out {
+  animation: icona-out-fade 0.4s ease-in both;
+}
+
+/* ---------- reduced motion: fade only, no loops (README rule 5) ----------
+   Keyed off the component's `is-reduce` class (it tracks the OS preference,
+   and the lab's "forzar movimiento" toggle can override it) — a media query
+   here could not be overridden from JS. */
+
+.icona-stage.is-reduce {
+  animation: none !important;
+  transition: opacity 0.2s ease;
+}
+
+.icona-stage.is-reduce.is-in,
+.icona-stage.is-reduce.is-stay {
+  opacity: 1;
+}
+
+.icona-stage.is-reduce.is-out {
+  opacity: 0;
+}
+
+.icona-stage.is-reduce .icona-fx::before,
+.icona-stage.is-reduce .icona-fx::after {
+  animation: none !important;
+}
+
+.icona-stage.is-reduce #heart,
+.icona-stage.is-reduce #ecg,
+.icona-stage.is-reduce .icona-inline path {
+  animation: none !important;
+}

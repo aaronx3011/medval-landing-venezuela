@@ -1,0 +1,9 @@
+node_modules
+.next
+media
+example
+.env*
+.git
+info/
+example/
+seed-assets

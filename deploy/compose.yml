@@ -1,0 +1,46 @@
+services:
+  web:
+    image: ${IMAGE:?IMAGE not set}
+    container_name: medval-ve-web
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_URI: mongodb://mongo:27017/medval_ve?replicaSet=rs0
+      MEDIA_DIR: /app/media
+    ports:
+      # Staging: WireGuard IP (reached by the edge nginx). Production: 127.0.0.1 (reached by its local nginx).
+      - '${BIND_IP:?BIND_IP not set in .env}:3000:3000'
+    volumes:
+      - ./media:/app/media
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000/']
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  mongo:
+    # MONGO_VERSION comes from the server's .env: "8" by default, "4.4" on servers whose CPU lacks AVX (staging).
+    image: mongo:${MONGO_VERSION:-8}
+    restart: unless-stopped
+    command: ['--replSet', 'rs0', '--bind_ip_all', '--wiredTigerCacheSizeGB', '0.25']
+    volumes:
+      - mongo-data:/data/db
+    # Also initializes the single-node replica set on first start.
+    # Uses mongosh when available (5.0+), otherwise the legacy mongo shell (4.4).
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'SH=$$(command -v mongosh || command -v mongo); $$SH --quiet --eval "try { if (db.adminCommand({replSetGetStatus:1}).ok !== 1) throw 0 } catch (e) { try { rs.initiate({_id:''rs0'',members:[{_id:0,host:''mongo:27017''}]}) } catch (e2) {} } quit(db.isMaster().ismaster ? 0 : 1)"',
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+
+volumes:
+  mongo-data:

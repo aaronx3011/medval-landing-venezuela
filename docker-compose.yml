@@ -1,0 +1,54 @@
+# Local development stack (WEB-01): one command brings up the whole app.
+#
+#   cp .env.example .env
+#   docker compose up
+#
+# Site: http://localhost:3000  ·  Admin: http://localhost:3000/admin
+#
+# The deploy/runtime stack is deploy/compose.yml (copied to the servers on
+# every deploy). This file is for development on a laptop only.
+
+services:
+  web:
+    image: node:24-alpine
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app
+      - web-node-modules:/app/node_modules
+    working_dir: /app
+    command: sh -c "corepack enable && pnpm install && pnpm dev"
+    env_file: .env
+    environment:
+      # Inside the compose network the database host is the `mongo` service,
+      # not the 127.0.0.1 from .env (that one is for host-side pnpm commands).
+      DATABASE_URL: mongodb://mongo:27017/medval_ve?replicaSet=rs0
+      NEXT_TELEMETRY_DISABLED: '1'
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  mongo:
+    image: mongo:8
+    # Published for host-side tooling (pnpm seed, mongosh). Never published on the servers.
+    ports:
+      - '27017:27017'
+    # Single-node replica set, same as production (transactions require it)
+    command: ['--replSet', 'rs0', '--bind_ip_all', '--wiredTigerCacheSizeGB', '0.5']
+    volumes:
+      - mongo-data:/data/db
+    # Also initializes the single-node replica set on first start
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'mongosh --quiet --eval "try { rs.status().ok } catch (e) { rs.initiate({_id:''rs0'',members:[{_id:0,host:''mongo:27017''}]}).ok }"',
+        ]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 10s
+
+volumes:
+  web-node-modules:
+  mongo-data:
