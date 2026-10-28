@@ -62,10 +62,10 @@ export default async function CatalogPage({ params, searchParams }: Props) {
   const pageRegion = regions.docs[0] ?? null
 
   return (
-    <>
+    <div className="catalog-site">
       <ThemeVariables theme={settings.theme} />
-      <Header language={lang} region={pageRegion} />
-      <main className="impilo-home">
+      <Header language={lang} region={pageRegion} variant="catalog" />
+      <main className="catalog-main">
         <CatalogBrowser
           key={`${query.q}:${query.category}:${catalog.page}`}
           {...catalog}
@@ -74,6 +74,6 @@ export default async function CatalogPage({ params, searchParams }: Props) {
         />
       </main>
       <Footer language={lang} region={pageRegion} siteSettings={settings} />
-    </>
+    </div>
   )
 }

@@ -90,7 +90,15 @@ describe('CatalogBrowser', () => {
   it('filters by category and opens the product detail without purchase actions', () => {
     render(
       <CatalogBrowser
-        items={[items[1]]}
+        items={[
+          {
+            ...items[1],
+            images: [
+              { alt: 'Frasco frontal', url: '/api/media/file/front.jpg' },
+              { alt: 'Frasco lateral', url: '/api/media/file/side.jpg' },
+            ],
+          },
+        ]}
         language="es"
         totalDocs={1}
         totalPages={1}
@@ -98,7 +106,9 @@ describe('CatalogBrowser', () => {
       />,
     )
 
-    fireEvent.click(screen.getByRole('button', { name: /Ver detalle: Agua Inyectable PISA/ }))
+    const opener = screen.getByRole('button', { name: /Ver detalle: Agua Inyectable PISA/ })
+    opener.focus()
+    fireEvent.click(opener)
 
     expect(screen.getByRole('dialog').textContent).toContain('Agua estéril')
     expect(screen.getByRole('dialog').textContent).toContain('Requiere prescripción médica')
@@ -106,8 +116,13 @@ describe('CatalogBrowser', () => {
       within(screen.getByRole('dialog')).queryByText(/carrito|comprar|precio|añadir/i),
     ).toBeNull()
 
-    fireEvent.click(screen.getByRole('button', { name: 'Cerrar detalle' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Imagen siguiente' }))
+    expect(
+      within(screen.getByRole('dialog')).getByAltText('Frasco lateral').getAttribute('src'),
+    ).toBe('/api/media/file/side.jpg')
+    fireEvent.keyDown(window, { key: 'Escape' })
     expect(screen.queryByRole('dialog')).toBeNull()
+    expect(document.activeElement).toBe(opener)
   })
 
   it('shows a recoverable empty search without claiming the entire catalog is empty', () => {
