@@ -1,15 +1,14 @@
-/* The catalog has its own white / navy storefront palette. */
+/* Use the homepage brand colors on a clean white storefront. */
 .catalog-site {
-  --catalog-navy: #122e50;
-  --catalog-blue: #285b8a;
-  --catalog-ink: #18334f;
-  --catalog-muted: #62758a;
-  --catalog-line: #e1eaf3;
-  --catalog-tint: #f2f7fc;
+  --catalog-navy: var(--color-secondary-dark);
+  --catalog-blue: var(--color-secondary);
+  --catalog-accent: var(--color-primary);
+  --catalog-ink: var(--color-ink);
+  --catalog-muted: var(--color-secondary);
+  --catalog-line: color-mix(in srgb, var(--color-secondary) 14%, #fff);
+  --catalog-tint: color-mix(in srgb, var(--color-primary) 5%, #fff);
   --header-height: 88px;
-  --color-secondary-dark: var(--catalog-navy);
   --color-surface: #fff;
-  --color-primary: var(--catalog-blue);
   min-height: 100svh;
   color: var(--catalog-ink);
   background: #fff;
@@ -37,9 +36,6 @@ body:has(.catalog-site) {
 
 .catalog-site .brand img {
   width: 142px;
-  /* Preserve the official mark in a single navy treatment. */
-  filter: brightness(0) saturate(100%) invert(14%) sepia(32%) saturate(1310%) hue-rotate(176deg)
-    brightness(92%) contrast(96%);
 }
 
 .catalog-site .main-nav .main-nav__link {
@@ -61,7 +57,7 @@ body:has(.catalog-site) {
   bottom: 3px;
   left: 0;
   height: 2px;
-  background: var(--catalog-navy);
+  background: var(--catalog-accent);
   content: '';
 }
 
@@ -99,7 +95,7 @@ body:has(.catalog-site) {
   color: var(--catalog-navy);
   background: #fff;
   border-radius: 0 0 12px 12px;
-  box-shadow: 0 16px 32px rgb(18 46 80 / 9%);
+  box-shadow: 0 16px 32px color-mix(in srgb, var(--color-ink) 9%, transparent);
 }
 
 .catalog-site .mobile-nav a {
@@ -111,7 +107,7 @@ body:has(.catalog-site) {
 }
 
 .catalog-site :is(a, button, input):focus-visible {
-  outline: 2px solid #4f8fc7;
+  outline: 2px solid var(--catalog-accent);
   outline-offset: 4px;
 }
 
@@ -136,7 +132,7 @@ body:has(.catalog-site) {
   align-items: center;
   gap: 12px;
   margin-bottom: 30px;
-  color: #c1d3e5;
+  color: #fff;
   font-size: 12px;
 }
 
@@ -167,7 +163,7 @@ body:has(.catalog-site) {
 
 .catalog-hero .catalog-eyebrow {
   margin-bottom: 10px;
-  color: #c1d3e5;
+  color: #fff;
 }
 
 .catalog-hero h1 {
@@ -183,7 +179,7 @@ body:has(.catalog-site) {
 .catalog-hero__copy > p {
   max-width: 520px;
   margin: 0;
-  color: #c8d8e8;
+  color: #fff;
   font-size: 14px;
   line-height: 1.8;
 }
@@ -235,7 +231,7 @@ body:has(.catalog-site) {
 }
 
 .catalog-search__field:focus-within {
-  outline: 3px solid #6499c4;
+  outline: 3px solid var(--color-primary-dark);
   outline-offset: 3px;
 }
 
@@ -247,11 +243,11 @@ body:has(.catalog-site) {
   align-self: stretch;
   min-height: 44px;
   padding: 8px 22px;
-  color: #fff;
+  color: var(--catalog-navy);
   font: inherit;
   font-size: 13px;
   font-weight: 600;
-  background: var(--catalog-blue);
+  background: var(--catalog-accent);
   border: 0;
   border-radius: 6px;
   cursor: pointer;
@@ -259,7 +255,7 @@ body:has(.catalog-site) {
 }
 
 .catalog-search__field button:hover {
-  background: var(--catalog-navy);
+  background: var(--color-primary-dark);
 }
 
 .catalog-layout {
@@ -330,6 +326,7 @@ body:has(.catalog-site) {
 
 .catalog-categories nav a.is-active {
   font-weight: 600;
+  box-shadow: inset 3px 0 var(--catalog-accent);
 }
 
 .catalog-sidebar__note {
@@ -460,8 +457,8 @@ body:has(.catalog-site) {
 }
 
 .catalog-product:hover {
-  border-color: #b5cee4;
-  box-shadow: 0 8px 28px rgb(18 46 80 / 7%);
+  border-color: color-mix(in srgb, var(--catalog-accent) 42%, #fff);
+  box-shadow: 0 8px 28px color-mix(in srgb, var(--color-ink) 7%, transparent);
   transform: translateY(-3px);
 }
 
@@ -610,9 +607,9 @@ body:has(.catalog-site) {
 }
 
 .catalog-product:hover .catalog-product__link > span {
-  color: #fff;
-  background: var(--catalog-navy);
-  border-color: var(--catalog-navy);
+  color: var(--catalog-navy);
+  background: var(--catalog-accent);
+  border-color: var(--catalog-accent);
 }
 
 .catalog-empty {
@@ -723,7 +720,7 @@ body:has(.catalog-site) {
 
 .catalog-site .site-footer {
   padding: 32px max(32px, calc((100vw - 1400px) / 2 + 48px));
-  color: #c8d8e8;
+  color: #fff;
   background: var(--catalog-navy);
 }
 
@@ -741,7 +738,7 @@ body:has(.catalog-site) {
   z-index: 90;
   display: grid;
   padding: 32px;
-  background: rgb(9 27 48 / 65%);
+  background: color-mix(in srgb, var(--catalog-navy) 65%, transparent);
   backdrop-filter: blur(5px);
   place-items: center;
 }
@@ -759,7 +756,7 @@ body:has(.catalog-site) {
   color: var(--catalog-ink);
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 30px 100px rgb(9 27 48 / 20%);
+  box-shadow: 0 30px 100px color-mix(in srgb, var(--color-ink) 20%, transparent);
 }
 
 .catalog-dialog__close {
