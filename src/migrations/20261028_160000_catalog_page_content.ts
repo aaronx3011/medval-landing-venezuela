@@ -5,6 +5,13 @@ import { importSuppliedCatalog, suppliedCatalogItems } from '../lib/catalogImpor
 
 /** One-time catalog content release; deliberately separate from the development seed. */
 export async function up({ payload, req, session }: MigrateUpArgs): Promise<void> {
+  // Mongoose starts collection/index creation asynchronously. Let it finish
+  // before the migration transaction acquires read/write locks on these models.
+  await Promise.all([
+    payload.db.collections['catalog-items'].init(),
+    payload.db.collections.media.init(),
+  ])
+
   await importSuppliedCatalog(payload, {
     req,
     // Three representative JPEG photos per medicine; originals remain in the repo.
