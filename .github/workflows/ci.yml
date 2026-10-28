@@ -33,7 +33,7 @@ jobs:
           MEDIA_DIR: ${{ runner.temp }}/catalog-ci-media
         run: |
           docker run -d --name catalog-ci-mongo -p 127.0.0.1:27017:27017 mongo:8 --replSet rs0 --bind_ip_all
-          trap 'docker rm -f catalog-ci-mongo' EXIT
+          trap 'docker logs --tail 80 catalog-ci-mongo; docker rm -f catalog-ci-mongo' EXIT
           for attempt in $(seq 1 30); do
             if docker exec catalog-ci-mongo mongosh --quiet --eval 'db.adminCommand({ping:1})' >/dev/null 2>&1; then break; fi
             sleep 2
