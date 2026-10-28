@@ -6,4 +6,4 @@ example
 .git
 info/
 example/
-seed-assets
+seed-assets/catalog/*.png

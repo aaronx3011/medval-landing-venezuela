@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { isEditor } from '../access'
+import { catalogSearchText } from '../lib/catalog'
 
 /**
  * Demo pharmaceutical catalog. Items are stored in MongoDB through Payload so
@@ -27,7 +28,25 @@ export const CatalogItems: CollectionConfig = {
     read: ({ req: { user } }) => (user ? true : { published: { equals: true } }),
     update: isEditor,
   },
+  hooks: {
+    beforeChange: [
+      ({ data, originalDoc, req }) => ({
+        ...data,
+        searchText: catalogSearchText(
+          { ...originalDoc, ...data },
+          req.locale === 'en' ? 'en' : 'es',
+        ),
+      }),
+    ],
+  },
   fields: [
+    {
+      name: 'searchText',
+      type: 'textarea',
+      localized: true,
+      admin: { hidden: true },
+      access: { read: () => false },
+    },
     {
       name: 'name',
       type: 'text',
@@ -57,6 +76,7 @@ export const CatalogItems: CollectionConfig = {
     {
       name: 'category',
       type: 'select',
+      index: true,
       label: { es: 'Categoría' },
       required: true,
       options: [
@@ -216,6 +236,7 @@ export const CatalogItems: CollectionConfig = {
     {
       name: 'published',
       type: 'checkbox',
+      index: true,
       label: { es: 'Publicado' },
       defaultValue: true,
       admin: {

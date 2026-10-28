@@ -25,3 +25,22 @@ jobs:
       - run: pnpm lint
       - run: pnpm format:check
       - run: pnpm typecheck
+      - name: Catalog tests
+        run: pnpm exec vitest run tests/int/catalog.int.spec.ts tests/int/catalogSection.int.spec.tsx tests/int/catalogQuery.int.spec.ts tests/int/catalogSeed.int.spec.ts tests/int/seo.int.spec.ts --maxWorkers=2
+      - name: Verify catalog content migration with disposable MongoDB
+        env:
+          CATALOG_TEST_DATABASE_URI: mongodb://127.0.0.1:27017/catalog_ci_content?replicaSet=rs0&directConnection=true
+          MEDIA_DIR: ${{ runner.temp }}/catalog-ci-media
+        run: |
+          docker run -d --name catalog-ci-mongo -p 127.0.0.1:27017:27017 mongo:8 --replSet rs0 --bind_ip_all
+          trap 'docker rm -f catalog-ci-mongo' EXIT
+          for attempt in $(seq 1 30); do
+            if docker exec catalog-ci-mongo mongosh --quiet --eval 'db.adminCommand({ping:1})' >/dev/null 2>&1; then break; fi
+            sleep 2
+          done
+          docker exec catalog-ci-mongo mongosh --quiet --eval 'rs.initiate({_id:"rs0",members:[{_id:0,host:"localhost:27017"}]})'
+          for attempt in $(seq 1 30); do
+            if docker exec catalog-ci-mongo mongosh --quiet --eval 'quit(db.hello().isWritablePrimary ? 0 : 1)'; then break; fi
+            sleep 2
+          done
+          pnpm exec vitest run tests/int/catalogMigration.int.spec.ts --maxWorkers=1

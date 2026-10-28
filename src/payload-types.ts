@@ -220,6 +220,7 @@ export interface Media {
  */
 export interface CatalogItem {
   id: string;
+  searchText?: string | null;
   /**
    * Ejemplo: «A.M.K. (Amikacina) 500 mg/2 mL». Es el título de la tarjeta.
    */
@@ -497,6 +498,7 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "catalog-items_select".
  */
 export interface CatalogItemsSelect<T extends boolean = true> {
+  searchText?: T;
   name?: T;
   slug?: T;
   category?: T;

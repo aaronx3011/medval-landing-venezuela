@@ -136,7 +136,17 @@ The layout is fixed and the client edits content inside it: texts and images, no
 | Quote Requests | Collection | No (stores region and language) | Contact and quote form submissions: name, email, phone, region, language, service, message, date | Client reads; public cannot read |
 | Users | Collection | No | Accounts with roles: admin (us) and editor (client) | Admin only |
 
-The catalog section appears on the homepage after the product cards. Visitors search by name, active ingredient, category or keywords and open a detail panel; there is no price, cart or checkout. `pnpm seed` uploads the demo photos from `seed-assets/catalog/` into Media and creates the products. See [ADR 0004](docs/adr/0004-catalog-items.md).
+The catalog has dedicated pages at `/es/int/catalogo` and `/en/int/catalogo`.
+Search and category filters query the complete database, returning 12 products
+per page with shareable `q`, `category` and `page` parameters. Editors add, change,
+unpublish and delete products in `/admin/collections/catalog-items`; search text
+is updated automatically. There is no price, cart or checkout.
+
+The versioned `20261028_160000_catalog_page_content` production migration imports
+the four supplied medicines and three representative photos each. Existing
+products and media are preserved. This is a catalog-only content release, not
+the development placeholder seed; no globals, contacts or users are overwritten.
+Do not run `pnpm seed` in production. See [ADR 0005](docs/adr/0005-catalog-page-and-content-import.md).
 
 Empty Landing fields fall back to the approved copy in `src/i18n/home.ts`, so the page keeps its current content until an editor fills a field. Draft edits are visible at `/preview?global=landing&locale=es|en`; click **Publicar cambios** to apply them to the public site.
 

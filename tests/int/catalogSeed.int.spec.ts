@@ -1,7 +1,9 @@
 import type { Payload } from 'payload'
 import { describe, expect, it, vi } from 'vitest'
 
-import { catalogSeedItems, seedCatalog } from '@/seed/catalog'
+import { catalogSeedItems } from '@/seed/catalog'
+import { importSuppliedCatalog } from '@/lib/catalogImport'
+import type { PayloadRequest } from 'payload'
 
 const createPayload = () => {
   let mediaCount = 0
@@ -30,13 +32,30 @@ const createPayload = () => {
 }
 
 describe('seedCatalog', () => {
+  it('leaves existing edited or unpublished products and their media untouched on reruns', async () => {
+    const payload = createPayload()
+    payload.find.mockResolvedValue({ docs: [{ id: 'existing', published: false, name: 'Edited' }] })
+    const result = await importSuppliedCatalog(payload)
+    expect(result).toEqual({ created: 0, skipped: catalogSeedItems.length })
+    expect(payload.create).not.toHaveBeenCalled()
+    expect(payload.update).not.toHaveBeenCalled()
+  })
+
   it('uploads photos and upserts catalog items with localized copy', async () => {
     const payload = createPayload()
 
     const [first] = catalogSeedItems
     const items = [{ ...first, images: first.images.slice(0, 2) }]
 
-    await seedCatalog(payload, items)
+    const req = { transactionID: 'migration-transaction' } as PayloadRequest
+    await importSuppliedCatalog(payload, { items, req })
+    for (const calls of [
+      payload.find.mock.calls,
+      payload.create.mock.calls,
+      payload.update.mock.calls,
+    ]) {
+      for (const [args] of calls) expect(args.req).toBe(req)
+    }
 
     const mediaCreates = payload.create.mock.calls.filter(
       (call) => (call[0] as { collection: string }).collection === 'media',

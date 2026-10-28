@@ -4,21 +4,17 @@ import Image from 'next/image'
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { useReducedMotion } from '@/animations/useReducedMotion'
-import { CatalogSection } from '@/components/catalog/CatalogSection'
 import { CountUp } from '@/components/home/CountUp'
 import { Hero } from '@/components/home/Hero'
 import { AnimatedIcon } from '@/components/icons/AnimatedIcon'
 import { HOME_ICONS } from '@/components/icons/registry'
 import { RevealText } from '@/components/motion/RevealText'
 import type { HomeContent } from '@/i18n/home'
-import type { CatalogItemView } from '@/lib/catalog'
 import type { LanguageCode } from '@/regions'
 
 type ImpiloHomeProps = {
   /** Homepage copy merged from the Landing global and the static fallbacks. */
   content: HomeContent
-  /** Published catalog items fetched from Payload for the generated language. */
-  catalogItems: CatalogItemView[]
   /** Inline SVG markup per icon filename (keyed as in /public/icons). */
   icons?: Record<string, string>
   language: LanguageCode
@@ -101,7 +97,7 @@ const HighlightedTitle = ({
   </h3>
 )
 
-export const ImpiloHome = ({ catalogItems, content, icons = {}, language }: ImpiloHomeProps) => {
+export const ImpiloHome = ({ content, icons = {}, language }: ImpiloHomeProps) => {
   const homeRef = useRef<HTMLDivElement>(null)
   const howItWorksRef = useRef<HTMLElement>(null)
   const [hoveredSpecialties, setHoveredSpecialties] = useState(false)
@@ -350,10 +346,6 @@ export const ImpiloHome = ({ catalogItems, content, icons = {}, language }: Impi
             })}
           </ul>
         </section>
-
-        {catalogItems.length > 0 ? (
-          <CatalogSection items={catalogItems} language={language} />
-        ) : null}
       </div>
 
       <section

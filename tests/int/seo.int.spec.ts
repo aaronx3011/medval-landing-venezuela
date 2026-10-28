@@ -9,7 +9,12 @@ describe('SEO setup', () => {
 
     expect(tags).toEqual(['es', 'en'])
     expect(allPages().every(({ region }) => region === defaultRegion)).toBe(true)
-    expect(sitemap().map(({ url }) => new URL(url).pathname)).toEqual(['/es/int', '/en/int'])
+    expect(sitemap().map(({ url }) => new URL(url).pathname)).toEqual([
+      '/es/int',
+      '/es/int/catalogo',
+      '/en/int',
+      '/en/int/catalogo',
+    ])
   })
 
   it('uses the bare language tag for the international region', () => {

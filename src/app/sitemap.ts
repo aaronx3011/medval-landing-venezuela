@@ -14,11 +14,19 @@ const alternates = () =>
   ])
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return allPages().map(({ language, region }) => ({
-    alternates: {
-      languages: alternates(),
+  return allPages().flatMap(({ language, region }) => [
+    {
+      alternates: {
+        languages: alternates(),
+      },
+      lastModified: new Date(),
+      url: `${baseUrl}${pagePath(language, region)}`,
     },
-    lastModified: new Date(),
-    url: `${baseUrl}${pagePath(language, region)}`,
-  }))
+    {
+      url: `${baseUrl}${pagePath(language, region)}/catalogo`,
+      alternates: {
+        languages: { es: `${baseUrl}/es/int/catalogo`, en: `${baseUrl}/en/int/catalogo` },
+      },
+    },
+  ])
 }

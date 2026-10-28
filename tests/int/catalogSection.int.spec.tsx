@@ -1,7 +1,7 @@
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { CatalogSection } from '@/components/catalog/CatalogSection'
+import { CatalogBrowser } from '@/components/catalog/CatalogBrowser'
 import type { CatalogItemView } from '@/lib/catalog'
 
 vi.mock('next/image', () => ({
@@ -57,35 +57,46 @@ const items = [
 
 afterEach(cleanup)
 
-describe('CatalogSection', () => {
-  it('filters as the visitor types and clears back to every item', () => {
-    render(<CatalogSection items={items} language="es" />)
+describe('CatalogBrowser', () => {
+  it('submits search to the catalog page and preserves filters across server pages', () => {
+    render(
+      <CatalogBrowser
+        items={items}
+        language="es"
+        totalDocs={137}
+        totalPages={12}
+        query={{ q: 'agua', category: 'diluyente', page: 2 }}
+      />,
+    )
 
     expect(screen.getAllByRole('button', { name: /Ver detalle/ })).toHaveLength(3)
-    expect(screen.getByText('3 productos')).toBeTruthy()
-
-    fireEvent.change(screen.getByRole('searchbox', { name: 'Buscar en el catálogo' }), {
-      target: { value: 'albumina' },
-    })
-
-    expect(screen.getAllByRole('button', { name: /Ver detalle/ })).toHaveLength(1)
-    expect(screen.getByText('1 producto')).toBeTruthy()
-
-    fireEvent.change(screen.getByRole('searchbox', { name: 'Buscar en el catálogo' }), {
-      target: { value: 'no-existe' },
-    })
-
-    expect(screen.getByText('No encontramos productos')).toBeTruthy()
-
-    fireEvent.click(screen.getByRole('button', { name: 'Limpiar búsqueda' }))
-    expect(screen.getAllByRole('button', { name: /Ver detalle/ })).toHaveLength(3)
+    expect(screen.getByText('137 productos')).toBeTruthy()
+    expect(screen.getByRole('search').getAttribute('action')).toBe('/es/int/catalogo')
+    expect(screen.getByRole('search').getAttribute('method')).toBe('get')
+    expect(screen.getByRole('link', { name: 'Siguiente' }).getAttribute('href')).toBe(
+      '/es/int/catalogo?q=agua&category=diluyente&page=3',
+    )
+    expect(screen.getByRole('link', { name: 'Anterior' }).getAttribute('href')).toBe(
+      '/es/int/catalogo?q=agua&category=diluyente',
+    )
+    expect(screen.getByRole('link', { name: 'Antibiótico' }).getAttribute('href')).toBe(
+      '/es/int/catalogo?q=agua&category=antibiotico',
+    )
+    expect(screen.getByRole('link', { name: 'Limpiar búsqueda' }).getAttribute('href')).toBe(
+      '/es/int/catalogo',
+    )
   })
 
   it('filters by category and opens the product detail without purchase actions', () => {
-    render(<CatalogSection items={items} language="es" />)
-
-    fireEvent.click(screen.getByRole('button', { name: 'Diluyente' }))
-    expect(screen.getAllByRole('button', { name: /Ver detalle/ })).toHaveLength(1)
+    render(
+      <CatalogBrowser
+        items={[items[1]]}
+        language="es"
+        totalDocs={1}
+        totalPages={1}
+        query={{ q: '', category: 'diluyente', page: 1 }}
+      />,
+    )
 
     fireEvent.click(screen.getByRole('button', { name: /Ver detalle: Agua Inyectable PISA/ }))
 
@@ -97,5 +108,21 @@ describe('CatalogSection', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Cerrar detalle' }))
     expect(screen.queryByRole('dialog')).toBeNull()
+  })
+
+  it('shows a recoverable empty search without claiming the entire catalog is empty', () => {
+    render(
+      <CatalogBrowser
+        items={[]}
+        language="en"
+        totalDocs={0}
+        totalPages={1}
+        query={{ q: 'missing', category: 'all', page: 1 }}
+      />,
+    )
+    expect(screen.getByText('No products found')).toBeTruthy()
+    expect(screen.getByRole('link', { name: 'Clear search' }).getAttribute('href')).toBe(
+      '/en/int/catalogo',
+    )
   })
 })

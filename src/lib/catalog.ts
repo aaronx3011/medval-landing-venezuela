@@ -101,14 +101,14 @@ export const toCatalogItemView = (doc: CatalogItem): CatalogItemView | null => {
   }
 }
 
-const normalize = (value: string) =>
+export const normalizeCatalogSearch = (value: string) =>
   value
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
 
-const searchText = (item: CatalogItemView, language: LanguageCode) =>
-  normalize(
+export const catalogSearchText = (item: Partial<CatalogItemView>, language: LanguageCode) =>
+  normalizeCatalogSearch(
     [
       item.name,
       item.activeIngredient,
@@ -121,7 +121,7 @@ const searchText = (item: CatalogItemView, language: LanguageCode) =>
       item.indications,
       item.warnings,
       item.keywords,
-      categoryLabel(item.category, language),
+      item.category ? categoryLabel(item.category, language) : '',
     ]
       .filter(Boolean)
       .join(' '),
@@ -138,7 +138,7 @@ export const searchCatalogItems = (
   category: CatalogCategory | 'all' = 'all',
   language: LanguageCode = 'es',
 ): CatalogItemView[] => {
-  const terms = normalize(query)
+  const terms = normalizeCatalogSearch(query)
     .split(/\s+/)
     .map((term) => term.trim())
     .filter(Boolean)
@@ -147,7 +147,7 @@ export const searchCatalogItems = (
     if (category !== 'all' && item.category !== category) return false
     if (terms.length === 0) return true
 
-    const haystack = searchText(item, language)
+    const haystack = catalogSearchText(item, language)
 
     return terms.every((term) => haystack.includes(term))
   })

@@ -1,21 +1,20 @@
 'use client'
 
 import Image from 'next/image'
+import Link from 'next/link'
 import { useEffect, useMemo, useRef, useState } from 'react'
 
 import { getCatalogStrings } from '@/i18n/catalog'
-import {
-  categoryLabel,
-  catalogCategoryOrder,
-  searchCatalogItems,
-  type CatalogCategory,
-  type CatalogItemView,
-} from '@/lib/catalog'
+import { categoryLabel, catalogCategoryOrder, type CatalogItemView } from '@/lib/catalog'
 import type { LanguageCode } from '@/regions'
+import { catalogHref, type CatalogQuery } from '@/lib/catalogQuery'
 
-type CatalogSectionProps = {
+type CatalogBrowserProps = {
   items: CatalogItemView[]
   language: LanguageCode
+  query: CatalogQuery
+  totalDocs: number
+  totalPages: number
 }
 
 const SearchIcon = () => (
@@ -31,23 +30,18 @@ const CloseIcon = () => (
   </svg>
 )
 
-export const CatalogSection = ({ items, language }: CatalogSectionProps) => {
+export const CatalogBrowser = ({
+  items,
+  language,
+  query,
+  totalDocs,
+  totalPages,
+}: CatalogBrowserProps) => {
   const strings = getCatalogStrings(language)
-  const [query, setQuery] = useState('')
-  const [category, setCategory] = useState<CatalogCategory | 'all'>('all')
+  const base = `/${language}/int/catalogo`
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [activeImage, setActiveImage] = useState(0)
   const closeButtonRef = useRef<HTMLButtonElement>(null)
-
-  const categories = useMemo(
-    () => catalogCategoryOrder.filter((value) => items.some((item) => item.category === value)),
-    [items],
-  )
-
-  const results = useMemo(
-    () => searchCatalogItems(items, query, category, language),
-    [items, query, category, language],
-  )
 
   const selected = useMemo(
     () => items.find((item) => item.id === selectedId) ?? null,
@@ -72,21 +66,22 @@ export const CatalogSection = ({ items, language }: CatalogSectionProps) => {
     }
   }, [selected])
 
-  const clearFilters = () => {
-    setQuery('')
-    setCategory('all')
-  }
-
   const currentImage = selected?.images[activeImage] ?? selected?.images[0] ?? null
 
   return (
-    <section aria-labelledby="catalog-heading" className="impilo-catalog" id="catalogo">
+    <div className="impilo-catalog catalog-page" id="catalogo">
       <div className="impilo-catalog__inner">
         <span className="impilo-catalog__eyebrow">{strings.catalogEyebrow}</span>
-        <h2 id="catalog-heading">{strings.heading}</h2>
+        <h1 id="catalog-heading">{strings.heading}</h1>
         <p className="impilo-catalog__lead">{strings.lead}</p>
 
-        <div className="impilo-catalog__search">
+        <form
+          action={base}
+          method="get"
+          role="search"
+          className="impilo-catalog__search catalog-page__search"
+          key={`${query.q}:${query.category}`}
+        >
           <span aria-hidden="true" className="impilo-catalog__search-icon">
             <SearchIcon />
           </span>
@@ -96,54 +91,54 @@ export const CatalogSection = ({ items, language }: CatalogSectionProps) => {
           <input
             autoComplete="off"
             id="catalog-search"
-            onChange={(event) => setQuery(event.target.value)}
+            name="q"
+            maxLength={200}
             placeholder={strings.searchPlaceholder}
             type="search"
-            value={query}
+            defaultValue={query.q}
           />
-          {query ? (
-            <button
-              aria-label={strings.clearSearch}
-              className="impilo-catalog__clear"
-              onClick={() => setQuery('')}
-              type="button"
-            >
-              <CloseIcon />
-            </button>
+          {query.category !== 'all' ? (
+            <input type="hidden" name="category" value={query.category} />
           ) : null}
-        </div>
+          <button type="submit" className="catalog-page__submit">
+            {strings.searchButton}
+          </button>
+        </form>
 
-        {categories.length > 1 ? (
+        <>
           <div aria-label={strings.filterLabel} className="impilo-catalog__filters" role="group">
-            <button
-              aria-pressed={category === 'all'}
-              className={`impilo-catalog__chip${category === 'all' ? ' is-active' : ''}`}
-              onClick={() => setCategory('all')}
-              type="button"
+            <Link
+              aria-current={query.category === 'all' ? 'true' : undefined}
+              className={`impilo-catalog__chip${query.category === 'all' ? ' is-active' : ''}`}
+              href={catalogHref(base, { ...query, category: 'all', page: 1 })}
             >
               {strings.allCategories}
-            </button>
-            {categories.map((value) => (
-              <button
-                aria-pressed={category === value}
-                className={`impilo-catalog__chip${category === value ? ' is-active' : ''}`}
+            </Link>
+            {catalogCategoryOrder.map((value) => (
+              <Link
+                aria-current={query.category === value ? 'true' : undefined}
+                className={`impilo-catalog__chip${query.category === value ? ' is-active' : ''}`}
                 key={value}
-                onClick={() => setCategory(value)}
-                type="button"
+                href={catalogHref(base, { ...query, category: value, page: 1 })}
               >
                 {categoryLabel(value, language)}
-              </button>
+              </Link>
             ))}
           </div>
-        ) : null}
+        </>
 
         <p aria-live="polite" className="impilo-catalog__count">
-          {strings.results(results.length)}
+          {strings.results(totalDocs)}
         </p>
+        {query.q || query.category !== 'all' ? (
+          <Link className="catalog-page__reset" href={base}>
+            {strings.clearFilters}
+          </Link>
+        ) : null}
 
-        {results.length > 0 ? (
+        {items.length > 0 ? (
           <ul className="impilo-catalog__grid">
-            {results.map((item) => {
+            {items.map((item) => {
               const image = item.images[0]
 
               return (
@@ -189,15 +184,31 @@ export const CatalogSection = ({ items, language }: CatalogSectionProps) => {
           </ul>
         ) : (
           <div className="impilo-catalog__empty">
-            <h3>{items.length === 0 ? strings.emptyTitle : strings.noResultsTitle}</h3>
-            <p>{items.length === 0 ? strings.emptyBody : strings.noResultsBody}</p>
-            {items.length > 0 ? (
-              <button className="impilo-catalog__reset" onClick={clearFilters} type="button">
-                {strings.clearFilters}
-              </button>
-            ) : null}
+            <h2>
+              {query.q || query.category !== 'all' ? strings.noResultsTitle : strings.emptyTitle}
+            </h2>
+            <p>{query.q || query.category !== 'all' ? strings.noResultsBody : strings.emptyBody}</p>
           </div>
         )}
+        {totalPages > 1 ? (
+          <nav className="catalog-page__pagination" aria-label={strings.pagination}>
+            {query.page > 1 ? (
+              <Link rel="prev" href={catalogHref(base, { ...query, page: query.page - 1 })}>
+                {strings.previous}
+              </Link>
+            ) : (
+              <span />
+            )}
+            <span>{strings.pageLabel(query.page, totalPages)}</span>
+            {query.page < totalPages ? (
+              <Link rel="next" href={catalogHref(base, { ...query, page: query.page + 1 })}>
+                {strings.next}
+              </Link>
+            ) : (
+              <span />
+            )}
+          </nav>
+        ) : null}
       </div>
 
       {selected ? (
@@ -322,6 +333,6 @@ export const CatalogSection = ({ items, language }: CatalogSectionProps) => {
           </div>
         </div>
       ) : null}
-    </section>
+    </div>
   )
 }

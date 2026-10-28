@@ -26,6 +26,11 @@ export type CatalogStrings = {
   registration: string
   results: (count: number) => string
   searchLabel: string
+  searchButton: string
+  pagination: string
+  previous: string
+  next: string
+  pageLabel: (page: number, total: number) => string
   searchPlaceholder: string
   viewDetails: string
   warnings: string
@@ -58,6 +63,11 @@ export const catalogStrings: Record<LanguageCode, CatalogStrings> = {
     registration: 'Registro sanitario',
     results: (count) => (count === 1 ? '1 producto' : `${count} productos`),
     searchLabel: 'Buscar en el catálogo',
+    searchButton: 'Buscar',
+    pagination: 'Páginas del catálogo',
+    previous: 'Anterior',
+    next: 'Siguiente',
+    pageLabel: (page, total) => `Página ${page} de ${total}`,
     searchPlaceholder: 'Buscar por nombre, principio activo o categoría…',
     viewDetails: 'Ver detalle',
     warnings: 'Precauciones',
@@ -88,6 +98,11 @@ export const catalogStrings: Record<LanguageCode, CatalogStrings> = {
     registration: 'Sanitary registration',
     results: (count) => (count === 1 ? '1 product' : `${count} products`),
     searchLabel: 'Search the catalog',
+    searchButton: 'Search',
+    pagination: 'Catalog pages',
+    previous: 'Previous',
+    next: 'Next',
+    pageLabel: (page, total) => `Page ${page} of ${total}`,
     searchPlaceholder: 'Search by name, active ingredient, or category…',
     viewDetails: 'View details',
     warnings: 'Precautions',

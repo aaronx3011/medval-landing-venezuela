@@ -1,0 +1,76 @@
+.catalog-page {
+  min-height: 100svh;
+  padding-top: calc(var(--header-height) + 64px);
+}
+
+.catalog-page h1 {
+  max-width: 980px;
+  margin: 0 auto;
+  color: var(--color-on-light);
+  font-size: clamp(2.5rem, 6.4vw, 5.75rem);
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-wrap: balance;
+}
+
+.catalog-page__search {
+  display: flex;
+  gap: 12px;
+}
+
+.catalog-page__search input[type='search'] {
+  min-width: 0;
+  padding-right: 22px;
+}
+
+.catalog-page__submit {
+  padding: 0 24px;
+  color: var(--color-on-dark);
+  font: inherit;
+  font-weight: 600;
+  background: var(--color-secondary-dark);
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.catalog-page__reset {
+  display: inline-block;
+  padding: 8px 16px;
+  text-decoration: underline;
+}
+
+.catalog-page__pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 40px;
+}
+
+.catalog-page__pagination a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 8px 20px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+}
+
+.catalog-page .impilo-catalog__empty h2 {
+  font-size: 24px;
+  line-height: 1.2;
+}
+
+@media (max-width: 680px) {
+  .catalog-page {
+    padding-top: calc(var(--header-height) + 40px);
+  }
+
+  .catalog-page__submit {
+    padding-inline: 16px;
+  }
+}

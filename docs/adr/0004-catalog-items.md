@@ -1,5 +1,8 @@
 # Catalog items are Payload documents, searched in the browser
 
+**Status:** the client-side search and homepage placement are superseded by
+[ADR 0005](0005-catalog-page-and-content-import.md). The storage model remains.
+
 The demo catalog is a `catalog-items` collection in MongoDB, managed from the
 Payload admin at `/admin/collections/catalog-items`. Each item holds localized
 Spanish/English copy (`name`, `description`, `activeIngredient`,

@@ -58,8 +58,7 @@ export const middleware = (req: NextRequest) => {
   const [first, second] = segments
   const url = req.nextUrl.clone()
 
-  // `/{language}/{region}` is the only valid public shape; anything deeper
-  // under it (there are no subpages) falls through to the 404 route.
+  // Public pages share the language/region prefix; subpages validate their own route.
   if (first && isLanguageCode(first) && second && isRegionCode(second)) {
     if (segments.length === 2 && second !== defaultRegion) {
       url.pathname = pagePath(first, defaultRegion)

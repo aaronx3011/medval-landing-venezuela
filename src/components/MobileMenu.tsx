@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { sectionIds } from '@/components/sections'
+import { navigationHref, sectionIds } from '@/components/sections'
 import { getUIStrings } from '@/i18n/strings'
 import type { LanguageCode } from '@/regions'
 
@@ -56,7 +56,7 @@ export const MobileMenu = ({ language }: { language: LanguageCode }) => {
           id="mobile-nav"
         >
           {sectionIds.map((id) => (
-            <a key={id} href={`#${id}`} onClick={() => setOpen(false)}>
+            <a key={id} href={navigationHref(id, language)} onClick={() => setOpen(false)}>
               {strings.sectionLabels[id]}
             </a>
           ))}

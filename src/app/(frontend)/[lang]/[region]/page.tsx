@@ -5,7 +5,6 @@ import { notFound, permanentRedirect } from 'next/navigation'
 import config from '@/payload.config'
 import { Footer } from '@/components/Footer'
 import { buildHomeContent } from '@/lib/landingContent'
-import { toCatalogItemView } from '@/lib/catalog'
 import { Header } from '@/components/Header'
 import { Contact } from '@/components/sections/Contact'
 import { ThemeVariables } from '@/components/ThemeVariables'
@@ -104,22 +103,11 @@ export default async function RegionLandingPage(props: {
   const payloadConfig = await config
   const payload = await getPayload({ config: payloadConfig })
 
-  const [landing, siteSettings, pageRegion, catalog] = await Promise.all([
+  const [landing, siteSettings, pageRegion] = await Promise.all([
     payload.findGlobal({ slug: 'landing', locale: language }),
     payload.findGlobal({ slug: 'site-settings' }),
     findRegion(payload, language),
-    payload.find({
-      collection: 'catalog-items',
-      where: { published: { equals: true } },
-      locale: language,
-      sort: 'name',
-      limit: 100,
-    }),
   ])
-
-  const catalogItems = catalog.docs
-    .map((item) => toCatalogItemView(item))
-    .filter((item): item is NonNullable<typeof item> => item !== null)
 
   return (
     <>
@@ -128,7 +116,6 @@ export default async function RegionLandingPage(props: {
 
       <main>
         <ImpiloHome
-          catalogItems={catalogItems}
           content={buildHomeContent(language, landing)}
           icons={loadIcons()}
           language={language}

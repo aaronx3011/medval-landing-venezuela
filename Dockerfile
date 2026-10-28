@@ -33,6 +33,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nodejs /app/seed.mjs ./seed.mjs
+COPY --from=builder --chown=nextjs:nodejs /app/seed-assets/catalog/*.jpg ./catalog-import/
 RUN mkdir -p media && chown nextjs:nodejs media
 USER nextjs
 EXPOSE 3000
